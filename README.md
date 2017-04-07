@@ -1,31 +1,135 @@
-# WWW-Ohjelmointi harjoitus 3
+# Ohjeita PHP-kehyksen käyttöön
 
-Toisen harjoituksen jälkeen olimme tilanteessa, jossa meille oli muodostunut kaksi merkittävää ongelmaan. Olimme muodostaneet vahvan riippuvuuden SQL -tietokantaan ja meiltä puuttui täysin rakenne sovelluksen logiikasta.
+Alla olevia ohjeita ei ole tarkoitus toteuttaa. Saatte tosin tehdä mitä haluatte ja koodin pitäisi olla kunnossa, joten sen puoleen ei ole ongelmaa. Jos lataatte koodin, tekemänne mahdolliset muutokset eivät myöskään näy repositoryn (eli Tiko-ht:n) koodissa, joten tästä ei tartte huolehtia. Osa koodista on jo toteutettu kehyksessä.
 
-## Vahva sidos SQL -tietokantaan
+Kuvitellaan, että haluamme luoda sivun, jossa näytetään kaikki tietokannassa olevat käyttäjät. Kantaan on luotu taulu "user" kommennoilla:
 
-Ensimmäisen ongelman, vahvan riippuvuuden SQL -tietokantaan, voimme ratkaista joko kerroksittaisella arkkitehtuurilla Active Record -tyyliin, tai Repository Patternilla noudattaen tarkemmin SRP:tä. Koska jokseenkin kaikki ohjelmistokehykset miltei kielestä riippumatta toteuttavat Active Recordia, valitaan se toteutustavaksi.
+	CREATE TABLE user (
+		id integer PRIMARY KEY AUTO_INCREMENT,
+		name text NOT NULL,
+		email text NOT Null
+	);
 
-Nyt kaikki tietomalliluokat saavat tiedon varastointikyvyn abstraktilta Model -luokalta. Jatkossa kun tarvitsemme uusia tietomalliluokkia, joiden tietojen haluamme tallentuvan johonkin tietovarastoon, meidän tarvitsee vain periä Model -luokka.
+`AUTO_INCREMENT` automaattisesti numeroi sarakkeen 'id' (eli 0, 1, 2...). Kuvitellaan, että taulusta löytyy käyttäjiä. Tässä esimerkissä ei oteta kantaa salasanan käsittelyyn. 
 
-Jos haluaisimme luoda käyttäjäluokan, jonka tiedot voidaan varastoida, meidän tulisi vähäisimmillään kirjoittaa vain:
+## 1. Luodaan reitti osoitteeseen, jossa käyttäjät halutaan näyttää
 
-	class User extends Model {}
+Kuvitellaan, että haluamme näyttää käyttäjät osoitteessa sivusto.fi/users. Aloitamme aluksi lisäämällä tämän reitin app\routes.php tiedostoon.
 
-Tämän jälkeen kaikki metodit ovat suoraan käytettävissämme, esimerkiksi:
+	$router->get('/users', ... );
 
-	User::all(); // Valmistelee ja ajaa kyselyn SELECT * FROM user;, palauttaa tulokset User -luokan instansseina
+Routes.php on tiedosto, jonka Router-luokka lataa suorituksen aikana, ja lisää routes.php-tiedostosta löytyvät reiti taulukkoonsa. Router siis rekisteröi routes.php:ssa olevat reiti.
 
-Samalla meillä on vain yksi yhteyspiste SQL -tietokantaan. Jos meille tulee eteen tarve vaihtaa tietovarantoa, riittää, että korvaamme yhden tiedoston. Lisäksi, koska abstrakti luokka on kuin interface, i.e. sopimus siitä, mitä toiminnallisuutta pitää toteuttaa, sillä erolla, että abstrakti luokka saa toteuttaa osan toiminnallisuudesta itse, voimme periaatteessa vaihtaa yhden tietomalliluokan keskustelemaan yhdenlaisen tietovarannon kanssa ja toisen toisenlaisen. Tosin tässä kohtaa yksi interface -kerros väliin olisi parempaa arkkitehtuuria.
+Router-luokka jakaa kaikki reitit POST- ja GET-taulukoihin metodien get() ja post() perustella (tässä tapauksessa se on get()).  Aina kun kirjoitamme osoitekenttää osoitteen, teemme GET-pyynnön. Jos haluamme lisätä sivustolle (tai kantaan) tietoa, teemme POST-pyynnön. Näiden lisäksi on vielä DELETE- ja PUT-pyynnöt (poisto ja päivitys).
 
-## Kaikki suorittava logiikka sekaisin (ja rumat osoitteet)
+Reitin jälkeen lisätään routes.php:hen vielä kontrolleri ja kontrollerin metodi, jotka pyyntöön vastaavat.
 
-Aiemmin kaikki suorituksen logiikka on ollut `index.php` -tiedostossa. Tämä aiheuttaa pian ongelmia, jos sovellukseen lisätään uutta toiminnallisuutta, joka ei liity aiempaan. Esimerkiksi nyt kaikki toiminnallisuus liittyy tehtäviin, mutta jos meillä olisi lisäksi käyttäjiä ja käyttäjiin liittyvää toiminnallisuutta, haluaisimme varmasti jaotella suorittavan logiikan omiin karsinoihinsa aihealueen mukaan.
+	$router->get('/users', 'UserController@index);
 
-Lisäksi osoitteemme ovat jokseenkin rumia. Esimerkiksi osoite `index.php?action=merkkaa&id=1` ei ole kovin hyvä osoite, sillä oikeastaan `action=merkkaa` on jonkin toiminnallisuuspisteen osoite ja `id` on parametri tälle toiminnallisuudelle. Olisi parempi, jos voisimme merkata RESTful määrittelyn mukaisesti `/merkkaa/1`, tai vähintäänkin `/merkkaa/?id=1`. Merkkaaminen on lopulta sovelluksen toiminnallisuutta, eikä varsin parametri toiminnallisuudelle. WWW-palvelinohjelman kannalta `/merkkaa/1` tarkoittaisi kuitenkin, että avataan hakemisto `/merkkaa` ja sen alta hakemisto `/1` ja palautettaisiin sieltä jokin index -tiedosto, tai hakemistolistaus. Tästä syystä meidän täytyy joko `.htaccess` -tiedostolla, tai NginX:n tapauksessa Virtual Server blockissa määrittää, että pyyntö uudelleenkirjoitetaan ohjelmien ymmärtämään muotoon `index.php/merkkaa`.
+Router-luokka pilkkoo `UserController@indexin` osiin, luo uuden instanssin kontrollerista: `$controller = new UserController;`, ja kutsuu controllerin metodia `$controller->index`. Jos menemme nyt osoitteeseen /users, saamme virheilmoituksen, koska kontrolleria (eikä sen metodia) ole vielä olemassakaan. Luomme siis seuraavaksi nämä.
 
-Nyt saamme siis parametrin `/merkkaa` ja meidän täytyy sopia sille jokin merkitys. Tämän voimme tehdä `app/routes.php` -tiedostossa. Näin meille muodostuu yksi paikka, josta näemme kaikki sovelluksen vastaanottamat toiminnallisuusosoitteet. Lisäksi tarvitsemme jonkin komponentin toteuttamaan reititys tämän saadun osoitteen perusteella. `core/Router.php` lukee reititystiedoston, katsoo, mikä oli pyyntö, joka `core/Request.php` -luokassa kaunistellaan säännönmukaiseksi, ja delegoi suorituksen pyydetyn kokonaisuuden toteuttavalle kontrollerille.
+## 2. Luodaan kontrolleri ja sen metodi
 
-Näin toiminnallisuus on jaoteltu eri suorittaviin tiedostoihin.
+Kansiosta app\controllers löydämme kehyksemme kontrollerit. Kehys noudattaa MVC- eli Models Views Controllers-mallia, jossa Model on tässä tapauksessa User-luokka, Controller on UserController ja View on näkytmä, jonka kontrolleri lataa. Voimme kuvitella kontrollerin olevan siis työnjohtaja, mutta ei tästä sen enempää.
 
-Tässä on edelleen huomattavia ongelmia. Nyt kontrolleritiedosto on edelleen vain pätkä koodia. Haluamme sen olevan luokka, jolla on metodeja ja haluamme reitittimen ohjaamaan noihin luokan metodeihin pyyntöjen mukaisesti. Tämän lisäksi reititin sivuuttaa nyt kokonaan sen, että meillä on eri tyyppisiä kutsuja. GET, POST, PUT/PATCH, DELETE, ... Jos sivuutamme kutsun tyypin, altistamme koodin XSS -hyökkäyksille. Joudumme siis refaktoroimaan toteutusta edelleen, mutta edetään näin pienin askelein ja jatketaan ongelmiin törmäämistä.
+Luomme edellä mainittuun kansioon UserController.php-tiedoston, ja kirjoitamme tiedoston sisään:
+
+	<?php
+	
+	namespace App\App\Controllers;
+	
+	class UserController
+	{
+		public function index() 
+		{
+		
+		}
+	}
+
+**HUOM!** `namespace App\App\Controller;` on tärkeä, koska muuten Router-luokka ei löydä kontrolleria. Router etsii kontrollerit nimiavaruuksien perusteella, eikä esim. kansiorakenteen.
+
+Jos nyt kirjoitamme index()-metodiin koodia, kuten
+
+	echo 'Hello World!';
+	
+tulisi meidän nähdä nyt /users sivulla yllä mainittu teksti. Echo-funktio siis tulostaa näytölle tekstiä.
+
+Mutta pelkkä 'Hello World!' tuskin kelpaa, joten seuraavaksi lataamme oikean näkymän sivulle.
+
+## 3. Ladataan näkymä
+
+Poistetaan edellinen echo-lauseke, ja kirjotetaan sen tilalle
+
+	return view('users');
+
+View()-funktio on core\helpers.php-tiedostosta löytyvä funktio, joka yksinkertaisesti lataa sille parametrina annetun näkymän. Tässä tapauksessa view() palauttaa tiedoston `users.view.php`, josta 'users' tuli parametrina. Voimme myös antaa view()-funktiolle dataa, jota käytetään näkymässä, mutta tästä lisää myöhemmin.
+
+Nyt voimme luoda tiedoston `users.view.php` kansioon app\resources ja lisätä siihen haluamamme HTML-koodin. Kirjoitetaan esimerkiksi
+
+	<ul>
+		<li> Käyttäjä tähän <\li>
+	<\ul>
+
+Nyt jos menemme /users sivulle, näemme listan, jossa lukee 'Käyttäjä tähän.' Seuraavaksi on vuorossa käyttäjien noutaminen tietokannasta, ja tätä varten tarvitsemme luokan, joka vastaa user-taulun yhtä riviä.
+
+## 4. Luodaan user-taulun riviä vastaava luokka
+
+Kehyksestä löytyy funktioita, jotka noutavat dataa kannasta, mutta haluamme asettaa tämän datan tässä tapauksessa luokkaan, jotta saamme taulukon, joka on täytetty luokan instasseilla. Haluamme siis User-olioilla täytetyn taulukon.
+
+Luomme kansioon app\models User.php-tiedoston, ja kirjoitamme siihen
+
+		<?php
+		
+		namespace App\App\Models;
+		
+		use App\Core\Database\Model;
+		
+		class User extends Model
+		{
+		
+		}
+
+`Namespace App\App\Models;` lisää luokkamme `App\App\Models` nimiseen nimiavaruuteen, ja `use App\Core\Database\Model;` kommmennolla saamme käyttöömme `App\Core\Database` nimiavaruudesta löytyvän Model-luoka. Luokkamme User perii tämän Model-luokan ja kaikki sen metodit ja attribuutit. Luokallamme on siis jo hirveästi toiminnallisuutta, vaikka siinä ei ole riviäkään koodia.
+
+Model-luokasta löytyy paljon SQL-kyselyihin perustuvaa koodia, all()-metodi, joka etsii kannasta tietoa ja palauttaa tiedon metodin kutsuvan luokan instasseina. Sen sijaan, että kirjoittaisimme jokaiselle luokalle SQL-kyselyihin perustuvia metodeja, voimme vain periä Model-luokan, joka toteuttaa nämä kaikki. Meidän ei siis tarvitse kopioida koodia. Model-luokka osaa myös tunnistaa, mikä luokka kutsuu sen metodeja (esim. User vai Task), ja tehdä kyselyt sen perusteella.
+
+Lisäämme User-luokkaamme vain kaksi attribuuttia:
+
+		public $name;
+		public $email;
+
+Attribuutit vastaavat user-taulun sarakkeita 'name' ja 'email.' Nyt luokkamme on valmis. Seuraavaksi luomme taulukon User-olioista.
+
+## 5. User-taulukko
+
+Palataan UserControlleriin. Kirjoitetaan suoraan `namespace App\App\Controllers;`-lauseen alapuolelle lause `use App\App\Models\User;` Saamme siis kontrollerin käyttöön juuri luomamme User-luokan. Lisätään index()-metodiin return-lauseen yläpuolelle hyvin yksinkertainen lause:
+
+		$userArray = User::all();
+
+User-luokka perii Model-luokalta staattisen metodin `all()`, joka hakee kannasta tietoa ja palauttaa tämän tiedon metodin kutsuneen luokan instasseina. Tässä tapauksessa metodia kutsui User-luokka, joten kannasta saatu tieto sijoitetaan siis User-olioihin. All()-metodi palauttaa taulukon näistä olioista. Olioita on yhtä paljon, kun taulussa user on rivejä.
+
+Olemme melkein valmiit. Taulukko on enää saatava näkymämme tietoon, jotta sen sisältö voidaan tulostaa.
+
+## 6. Taulukko näkymälle
+
+Aiemmin mainittu view()-funktio mahdollistaa tiedon siirron näkymälle. Muokataan return-lausetta hieman:
+
+		return view('users', compact('userArray'));
+
+Compact()-funktio 'pakkaa' sille antamamme datan nätisti. Helpers.php puolestaan 'purkaa' tämän paketin extract()-metodilla, jolloin view()-funktiolla on käytössään `$userArray`. Koska view()-funktio palauttaa näkymän `require`-funktiolla (eli sama kuin kirjaimellisesti lisäisi require-lauseessa olevan tiedoston koodin metodin perään), on näkymällä myös käytössään $userArray. Jäljellä on enää tämän taulukon tulostaminen.
+
+## 7. Taulukon tulostus
+
+Palataan `users.view.php`-tiedostoon. Muokataan HTML-koodia hieman:
+
+	<ul>
+        	<?php foreach ($userArray as $user) : ?>
+            		<li>
+				<?php $user->name; ?>
+			</li>
+        	<?php endforeach; ?>
+	</ul>
+
+`<?php ?>`-tageilla voimme lisätä PHP-koodia HTML-koodin sisään. `Foreach()`-funtkio on hyvin samanlainen kuin for-looppi (eli for(int i=0; i < ..). Se siis käy jokaisen `$userArray`-taulukon alkion läpi, ja lisää sen `$user`-muuttujaan. `$user`-muuttuja on siis User-luokan instanssi, jonka attribuutteina olivat 'name' ja 'email.' Tässä tapauksessa tulostamme jokaisen käyttäjän nimen lauseella `<?php $user->name; ?>`. `<?php endforeach; ?>` lopettaa loopin.
+
+Näin saimme tulostettua kaikki käyttäjät. Prosessi saattaa vaikuttaa monimutkaiselta (ja tämä ohje on liian pitkä), mutta on helppo ymmärtää ja toteuttaa (toivottavasti).
