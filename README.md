@@ -91,7 +91,7 @@ Luomme kansioon app\models User.php-tiedoston, ja kirjoitamme siihen
 
 `Namespace App\App\Models;` lisää luokkamme `App\App\Models` nimiseen nimiavaruuteen, ja `use App\Core\Database\Model;` kommmennolla saamme käyttöömme `App\Core\Database` nimiavaruudesta löytyvän Model-luoka. Luokkamme User perii tämän Model-luokan ja kaikki sen metodit ja attribuutit. Luokallamme on siis jo hirveästi toiminnallisuutta, vaikka siinä ei ole riviäkään koodia.
 
-Model-luokasta löytyy paljon SQL-kyselyihin perustuvaa koodia, all()-metodi, joka etsii kannasta tietoa ja palauttaa tiedon metodin kutsuvan luokan instasseina. Sen sijaan, että kirjoittaisimme jokaiselle luokalle SQL-kyselyihin perustuvia metodeja, voimme vain periä Model-luokan, joka toteuttaa nämä kaikki. Meidän ei siis tarvitse kopioida koodia. Model-luokka osaa myös tunnistaa, mikä luokka kutsuu sen metodeja (esim. User vai Task), ja tehdä kyselyt sen perusteella.
+Model-luokasta löytyy paljon SQL-kyselyihin perustuvaa koodia, kuten all()-metodi, joka etsii kannasta tietoa ja palauttaa tiedon metodin kutsuvan luokan instasseina. Sen sijaan, että kirjoittaisimme jokaiselle luokalle SQL-kyselyihin perustuvia metodeja, voimme vain periä Model-luokan, joka toteuttaa nämä kaikki. Meidän ei siis tarvitse kopioida koodia. Model-luokka osaa myös tunnistaa, mikä luokka kutsuu sen metodeja (esim. User vai Task), ja tehdä kyselyt sen perusteella.
 
 Lisäämme User-luokkaamme vain kaksi attribuuttia:
 
