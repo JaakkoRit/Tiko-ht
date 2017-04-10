@@ -134,6 +134,49 @@ Palataan `users.view.php`-tiedostoon. Muokataan HTML-koodia hieman:
 
 Näin saimme tulostettua kaikki käyttäjät. Prosessi saattaa vaikuttaa monimutkaiselta (ja tämä ohje on liian pitkä), mutta on helppo ymmärtää ja toteuttaa (toivottavasti).
 
+Lopputulos on siis kokonaisuudessaan:
+
+Routes.php:
+	$router->get('/users', 'UserController@index);
+	
+UserController.php:	
+	<?php
+	
+	namespace App\App\Controllers;
+	
+	class UserController
+	{
+		public function index() 
+		{
+			$userArray = User::all()
+			
+			return view('users', compact('userArray');
+		}
+	}
+	
+User.php
+	<?php
+		
+	namespace App\App\Models;
+		
+	use App\Core\Database\Model;
+		
+	class User extends Model
+	{
+		public $name;
+		puböoc $email;
+	}
+	
+users.view.php:
+	<ul>
+        	<?php foreach ($userArray as $user) : ?>
+            		<li>
+				<?php $user->name; ?>
+			</li>
+        	<?php endforeach; ?>
+	</ul>
+	
+
 # Ohjeita ympäristön asennukseen
 
 Tarvitsemme muutaman ohjelman päästäksemme koodaileen:
