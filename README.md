@@ -167,14 +167,14 @@ User.php
 	class User extends Model
 	{
 		public $name;
-		puböoc $email;
+		public $email;
 	}
 	
 users.view.php:
 
 	<ul>
         	<?php foreach ($userArray as $user) : ?>
-            		<li>
+            	<li>
 				<?php $user->name; ?>
 			</li>
         	<?php endforeach; ?>
