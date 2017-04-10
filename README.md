@@ -124,7 +124,7 @@ Palataan `users.view.php`-tiedostoon. Muokataan HTML-koodia hieman:
 
 	<ul>
         	<?php foreach ($userArray as $user) : ?>
-            		<li>
+            	<li>
 				<?php $user->name; ?>
 			</li>
         	<?php endforeach; ?>
