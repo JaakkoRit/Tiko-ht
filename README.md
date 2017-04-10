@@ -148,7 +148,7 @@ Wamp on webbisovellusten tekoon suunniteltu kehitysympäristö, jonka mukana tul
 
 Kun asennuksen jälkeen käynnistätte Wampin, käynnistyy konelleenne oma palvelin, johon pääsette käsiksi osoitteesta localhost. Localhost lataa tiedostot kansiosta C:\wamp\www ja näyttää ne selaimessa. Tällä hetkellä sivulla pitäisi näkyä tietoa Wampista. Lisätään www-kansioon uusi kansio nimeltä tiko-ht (nimellä ei ole väliä). Tänne kansioon laitamme siis projektimme koodin ja näemme, miltä projektimme näyttää menemällä osoitteeseen localhost/tiko-ht.
 
-Meillä on kuitenkin ongelma: jos klikkaamme projektissamme linkkiä, joka vie esim. osoitteeseen `/users`, ohjautuu pyytömme osoitteeseen localhost/users. Oikean näkymän saamme aikaiseksi, jos lisäämme linkin `/users` etuliitteen `tiko-ht/`, eli linkki olisi tällöin `tiko-ht/users`. Tämä on kuitenkin huono ratkaisu, koska joutuisimme lisäämään etuliitteen `tiko-ht/` **KAIKKIIN** sivustomme linkkeihin ja poistamaan ne, kun siirrämme koodin koulun palvelimelle. Haluamme siis, että localhost vie meidät suoraan `tiko-ht`-kansioon, eli asetamme serverin `localhost` juurikansioksi `C:\wamp\www\tiko-ht`.
+Meillä on kuitenkin ongelma: jos klikkaamme projektissamme linkkiä, joka vie esim. osoitteeseen `/users`, ohjautuu pyyntömme osoitteeseen localhost/users. Oikean näkymän saamme aikaiseksi, jos lisäämme linkin `/users` etuliitteen `tiko-ht/`, eli linkki olisi tällöin `tiko-ht/users`. Tämä on kuitenkin huono ratkaisu, koska joutuisimme lisäämään etuliitteen `tiko-ht/` **KAIKKIIN** sivustomme linkkeihin ja poistamaan ne, kun siirrämme koodin koulun palvelimelle. Haluamme siis, että localhost vie meidät suoraan `tiko-ht`-kansioon, eli asetamme serverin `localhost` juurikansioksi `C:\wamp\www\tiko-ht`.
 
 [OHJEET TÄHÄN]
 
