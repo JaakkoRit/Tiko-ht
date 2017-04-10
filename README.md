@@ -133,3 +133,37 @@ Palataan `users.view.php`-tiedostoon. Muokataan HTML-koodia hieman:
 `<?php ?>`-tageilla voimme lisätä PHP-koodia HTML-koodin sisään. `Foreach()`-funtkio on hyvin samanlainen kuin for-looppi (eli for(int i=0; i < ..). Se siis käy jokaisen `$userArray`-taulukon alkion läpi, ja lisää sen `$user`-muuttujaan. `$user`-muuttuja on siis User-luokan instanssi, jonka attribuutteina olivat 'name' ja 'email.' Tässä tapauksessa tulostamme jokaisen käyttäjän nimen lauseella `<?php $user->name; ?>`. `<?php endforeach; ?>` lopettaa loopin.
 
 Näin saimme tulostettua kaikki käyttäjät. Prosessi saattaa vaikuttaa monimutkaiselta (ja tämä ohje on liian pitkä), mutta on helppo ymmärtää ja toteuttaa (toivottavasti).
+
+# Ohjeita ympäristön asennukseen
+
+Tarvitsemme muutaman ohjelman päästäksemme koodaileen:
+
+	1. Wamp
+	2. Composer
+	3. Git
+	
+## 1. Wamp
+
+Wamp on webbisovellusten tekoon suunniteltu kehitysympäristö, jonka mukana tulee mm. PHP ja MySQL-kanta. Wampin saa ladattua omalle koneelleen osoitteesta http://www.wampserver.com/en/, ja sen asennus on hyvin suoraviivaista. Tässä ohjeessa oletan, että asennatte Wampin sen oletuskansioon C:\wamp.
+
+Kun asennuksen jälkeen käynnistätte Wampin, käynnistyy konelleenne oma palvelin, johon pääsette käsiksi osoitteesta localhost. Localhost lataa tiedoston kansiosta C:\wamp\www ja näyttää ne selaimessa. Tällä hetkellä sivulla pitäisi näkyä tietoa Wampista. Lisätään www-kansioon uusi kansio nimeltä tiko-ht (nimellä ei ole väliä). Tänne kansioon laitamme siis projektimme koodin ja näemme, miltä projektimme näyttää menemällä osoitteeseen localhost/tiko-ht.
+
+Meillä on kuitenkin ongelma: jos klikkaamme projektissamme linkkiä, joka vie esim. osoitteeseen `/users`, ohjautuu pyytömme osoitteeseen localhost/users. Oikean näkymän saamme aikaiseksi, jos lisäämme linkin `/users` etuliitteen `tiko-ht/`, eli linkki olisi tällöin `tiko-ht/users`. Tämä on kuitenkin huono ratkaisu, koska joutuisimme lisäämään etuliitteen `tiko-ht/` **KAIKKIIN** sivustomme linkkeihin ja poistamaan ne, kun siirrämme koodin koulun palvelimelle. Haluamme siis, että localhost vie meidät suoraan `tiko-ht`-kansioon, eli asetamme serverin `localhost` juurikansioksi `C:\wamp\www\tiko-ht`.
+
+[OHJEET TÄHÄN]
+
+## 2. Composer
+
+Composer on pakettienhallintatyökalu PHP:lle. Projektimme juuressa on lista PHP-kirjastoista, joista projektimme on riippuvainen. Saamme nämä kaikki kirjastot asennettua helposti vain navigoimalla projektimme juureen komentorivillä ja syöttämällä komennon `composer install`. Kirjastot asentuvat `vendor`-kansioon projektin juuressa. Kaikki tulevaisuudessa asentamamme kirjastot tulevat myös tähän listaan automaattisesti. Voimme siis vain jakaa tämän listan projektin kehittäjien kesken, jolloin jäsenet voivat helposti itse asentaa vaadittavat kirjastot sen sijaan, että jakaisimme itse kirjastot. Composer pitää myös huolen, että kirjastot ovat ajan tasalla. Composer toimii lähes identtisesti Node Package Managerin (NPM:n) kanssa, joka keskittyy javascript-kirjastoihin.
+
+Composerin asennus on erittäin helppoa: lataatte osoitteesta https://getcomposer.org/download/ `Composer-Setup.exe`-tiedoston ja asennatte sen. Asennuksen yhteydessä Composer pyytää `php.exe`-tiedoston sijaintia, joka löytyy `C:\wamp\bin\php\php7.x.x\php.exe`. Nyt composer on asennettu, ja sitä käytetään komentorivillä komennoilla `composer <komento>`.
+
+## 3. Git
+
+Git on versionhallintatyökalu, ja sitä käytetään varmaan kaikissa maailman koodausprojekteissa. Gitin saa ladattua ja asennettua osoitteesta http://git-scm.com/download/win. Composerin tavoin Gittiä käytetään komentorivillä.
+
+Tämän jälkeen teette käyttäjät (ellei ole jo) github.comiin. Tämän jälkeen teidän tulee liittää tietokoneillanne generoimat `SSH-avaimet` käyttäjäänne. Generoinnin helpot ohjeet löytyvät osoitteesta [OSOITE TÄHÄN] ja avaimen linkitys käyttäjään osoitteesta [OSOITE TÄHÄN]. `SSH-avain` linkittää tietokonneenne Github-käyttäjiinne. Tämä tarkoittaa sitä, että jos annan käyttäjillenne kaikki oikeudet Tiko-ht-repositorioon, myös käyttäjiinne linkitetyillä tietokoneilla on nämä oikeudet. Voitte siis tehdä repositorioon muutoksia komentorivillänne git-komennoilla ilman, että kirjaudutte Github-käyttäjällänne sisään jonkin ohjelman kautta.
+
+Hyvin yksinkertainen git-komento on `git clone git@github.com:JaakkoUta/Tiko-ht.git`, joka kloonaa Tiko-ht-repositorion koneellenne. Tämä ei ole kuitenkaan sama kuin vain lataisi repon koneelle, vaan kloonauksen mukana tulee myös git-komennoilla tehtyjen muutosten historia. Eli vaikka tulisitte kesken kaiken projektiin mukaan ja kloonnaatte projektin repon koneellenne, näette esim. `SourceTree`-ohjelmalla kaikki muutokset, mitä projektiin ollaan tehty aivan sen alkuajoista lähtien.
+
+Nyt voitte komentorivillä navigoida kansioon `C:\wamp\www` ja syöttää komennon `git clone git@github.com:JaakkoUta/Tiko-ht.git Tiko-ht`. Komennon lopussa oleva `Tiko-ht` määrittelee kansion, mihin repo kloonataan. Näin käytössänne on kloonattu repositorio osoitteessa `localhost`, johon voitte gitin avulla ryhtyä koodaamaan.
