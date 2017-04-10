@@ -137,9 +137,11 @@ Näin saimme tulostettua kaikki käyttäjät. Prosessi saattaa vaikuttaa monimut
 Lopputulos on siis kokonaisuudessaan:
 
 Routes.php:
+
 	$router->get('/users', 'UserController@index);
 	
-UserController.php:	
+UserController.php:
+
 	<?php
 	
 	namespace App\App\Controllers;
@@ -155,6 +157,7 @@ UserController.php:
 	}
 	
 User.php
+
 	<?php
 		
 	namespace App\App\Models;
@@ -168,6 +171,7 @@ User.php
 	}
 	
 users.view.php:
+
 	<ul>
         	<?php foreach ($userArray as $user) : ?>
             		<li>
