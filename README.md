@@ -145,6 +145,7 @@ UserController.php:
 	<?php
 	
 	namespace App\App\Controllers;
+	use App\App\Models\User;
 	
 	class UserController
 	{
