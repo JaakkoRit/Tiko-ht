@@ -198,7 +198,9 @@ Kun asennuksen jälkeen käynnistätte Wampin, käynnistyy konelleenne oma palve
 
 Meillä on kuitenkin ongelma: jos klikkaamme projektissamme linkkiä, joka vie esim. osoitteeseen `/users`, ohjautuu pyyntömme osoitteeseen localhost/users. Oikean näkymän saamme aikaiseksi, jos lisäämme linkin `/users` etuliitteen `tiko-ht/`, eli linkki olisi tällöin `tiko-ht/users`. Tämä on kuitenkin huono ratkaisu, koska joutuisimme lisäämään etuliitteen `tiko-ht/` **KAIKKIIN** sivustomme linkkeihin ja poistamaan ne, kun siirrämme koodin koulun palvelimelle. Haluamme siis, että localhost vie meidät suoraan `tiko-ht`-kansioon, eli asetamme serverin `localhost` juurikansioksi `C:\wamp\www\tiko-ht`.
 
-[OHJEET TÄHÄN]
+Tämä onnistuu muokkaamalla tiedostoa `C:\wamp64\bin\apache\apache2.4.23\conf\extra\httpd-vhosts`. Kirjoitetaan kohdan `DocumentRoot` perään `/tiko-ht`, eli kokonaisuudessaan pitäisi lukea `C:/wamp64/www/tiko-ht`. Tämän jälkeen klikkaamme näytön oikeassa alakulmassa löytyvästä Wamp-ikonista oikealla hiiren painikkeella, valitsemalla `Wamp settings` ja sieltä `Add localhost in url`. Jos tätä ikonia ei näy, ei Wampserver ole päällä. Tällöin käynnistätte sen klikkaamalla `Wampserver64.exe`-tiedostoa, ja palvelimen tulisi käynnistyä.
+
+Nyt kun menemme osoitteeseen `localhost`, pitäisi meidän nähdä projektimme etusivu.
 
 ## 2. Composer
 
@@ -210,7 +212,7 @@ Composerin asennus on erittäin helppoa: lataatte osoitteesta https://getcompose
 
 Git on versionhallintatyökalu, ja sitä käytetään varmaan kaikissa maailman koodausprojekteissa. Gitin saa ladattua ja asennettua osoitteesta http://git-scm.com/download/win. Composerin tavoin Gittiä käytetään komentorivillä.
 
-Tämän jälkeen teette käyttäjät (ellei ole jo) github.comiin. Tämän jälkeen teidän tulee liittää tietokoneillanne generoimat `SSH-avaimet` käyttäjiinne. Generoinnin helpot ohjeet löytyvät osoitteesta [OSOITE TÄHÄN] ja avaimen linkitys käyttäjään osoitteesta [OSOITE TÄHÄN]. `SSH-avain` linkittää tietokonneenne Github-käyttäjiinne. Tämä tarkoittaa sitä, että jos annan käyttäjillenne kaikki oikeudet Tiko-ht-repositorioon, myös käyttäjiinne linkitetyillä tietokoneilla on nämä oikeudet. Voitte siis tehdä repositorioon muutoksia komentorivillänne git-komennoilla ilman, että kirjaudutte Github-käyttäjällänne sisään jonkin ohjelman kautta.
+Tämän jälkeen teette käyttäjät (ellei ole jo) github.comiin. Tämän jälkeen teidän tulee liittää tietokoneillanne generoimat `SSH-avaimet` käyttäjiinne. Generoinnin helpot ohjeet löytyvät osoitteesta https://git-scm.com/book/en/v2/Git-on-the-Server-Generating-Your-SSH-Public-Key#_generate_ssh_key ja avaimen linkitys käyttäjään osoitteesta https://git-scm.com/book/en/v2/GitHub-Account-Setup-and-Configuration. `SSH-avain` linkittää tietokonneenne Github-käyttäjiinne. Tämä tarkoittaa sitä, että jos annan käyttäjillenne kaikki oikeudet Tiko-ht-repositorioon, myös käyttäjiinne linkitetyillä tietokoneilla on nämä oikeudet. Voitte siis tehdä repositorioon muutoksia komentorivillänne git-komennoilla ilman, että kirjaudutte Github-käyttäjällänne sisään jonkin ohjelman kautta.
 
 Hyvin yksinkertainen git-komento on `git clone git@github.com:JaakkoUta/Tiko-ht.git`, joka kloonaa Tiko-ht-repositorion koneellenne. Tämä ei ole kuitenkaan sama kuin vain lataisi repon koneelle, vaan kloonauksen mukana tulee myös git-komennoilla tehtyjen muutosten historia. Eli vaikka tulisitte kesken kaiken projektiin mukaan ja kloonnaatte projektin repon koneellenne, näette esim. `SourceTree`-ohjelmalla kaikki muutokset, mitä projektiin ollaan tehty aivan sen alkuajoista lähtien.
 
