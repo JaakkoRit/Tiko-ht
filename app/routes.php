@@ -1,17 +1,15 @@
 <?php
 
 $router->get('/', 'HomeController@index');
-$router->get('/about', 'HomeController@about');
 
-$router->get('/tasks', 'TasksController@index');
-$router->post('/tasks', 'TasksController@save');
+$router->get('/student-login', 'StudentController@create');
+$router->post('/student-login', 'StudentController@save');
+$router->get('/logout', 'StudentController@destroy');
 
-$router->get('/register', 'UsersController@create');
-$router->post('/register', 'UsersController@save');
+$router->get('/teacher-login', 'TeacherController@create');
+$router->post('/teacher-login', 'TeacherController@save');
 
-$router->get('/login', 'SessionController@create');
-$router->post('/login', 'SessionController@save');
-$router->get('/logout', 'SessionController@destroy');
-
-$router->get('/esimerkki', 'EsimerkkiController@miumauku');
-$router->post('/esimerkki', 'EsimerkkiController@save');
+$router->get('/student-registration', 'DevController@create');
+$router->post('/student-registration', 'DevController@save');
+$router->get('/teacher-registration', 'DevController@create2');
+$router->post('/teacher-registration', 'DevController@save2');
