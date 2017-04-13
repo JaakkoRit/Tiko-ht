@@ -189,6 +189,7 @@ Tarvitsemme muutaman ohjelman päästäksemme koodaileen:
 	1. Wamp
 	2. Composer
 	3. Git
+	4. SourceTree
 	
 ## 1. Wamp
 
@@ -217,3 +218,7 @@ Tämän jälkeen teette käyttäjät (ellei ole jo) github.comiin. Tämän jälk
 Hyvin yksinkertainen git-komento on `git clone git@github.com:JaakkoUta/Tiko-ht.git`, joka kloonaa Tiko-ht-repositorion koneellenne. Tämä ei ole kuitenkaan sama kuin vain lataisi repon koneelle, vaan kloonauksen mukana tulee myös git-komennoilla tehtyjen muutosten historia. Eli vaikka tulisitte kesken kaiken projektiin mukaan ja kloonnaatte projektin repon koneellenne, näette esim. `SourceTree`-ohjelmalla kaikki muutokset, mitä projektiin ollaan tehty aivan sen alkuajoista lähtien.
 
 Nyt voitte komentorivillä navigoida kansioon `C:\wamp\www` ja syöttää komennon `git clone git@github.com:JaakkoUta/Tiko-ht.git Tiko-ht`. Komennon lopussa oleva `Tiko-ht` määrittelee kansion, mihin repo kloonataan. Näin käytössänne on kloonattu repositorio osoitteessa `localhost`, johon voitte gitin avulla ryhtyä koodaamaan.
+
+## 4. SourceTree
+
+https://www.sourcetreeapp.com/
