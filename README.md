@@ -261,7 +261,7 @@ Jälleen voi ottaa mallia muista luokista. Tulee määritellä `protected static
 
 Näkymän tulee `requireta` header-, footer-, message- ja errors-tiedostot. Näkymän tulee sisältää `form`, `inputit` ja `submit-buttonin`. Mallia voi ottaa muista näkymistä. `Formin` tulee lähettää POST-pyyntö rekisteröityyn osoitteeseen.
 
-Kontrollerin metodin tulee käsitellä lähetetty POST-pyyntö. Lähetetyt tiedot tulee aluksi validoida. Tämän jälkeen luodaan uusi rivi KAYTTAJA-tauluun User-luokan avulla ja luodaan uusi rivi YLLAPITAJA-tauluun Admin-luokan avulla. Ylläpitäjän `ID_KAYTTAJA` tulee luodulta User-oliolta. Mallia voi ottaa muista kontrollerin metodeista.
+Kontrollerin metodin tulee käsitellä lähetetty POST-pyyntö. Lähetetyt tiedot tulee aluksi validoida. Tämän jälkeen luodaan uusi rivi KAYTTAJA-tauluun User-luokan avulla ja luodaan uusi rivi YLLAPITAJA-tauluun Admin-luokan avulla. Ylläpitäjän `ID_KAYTTAJA` tulee luodulta User-oliolta. Syötetty salasana tulee kryptata. Mallia voi ottaa muista kontrollerin metodeista.
 
 ## 2. Kirjautuminen
 
