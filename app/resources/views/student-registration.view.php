@@ -2,6 +2,9 @@
 
     <form action="/student-registration" method="POST">
 
+        Esimerkki
+        Uusi
+
         <div class="field">
             <label class="label">Opiskelijanumero</label>
             <p class="control has-icon has-icon-right">
