@@ -1,0 +1,26 @@
+create table KAYTTAJA (
+	ID_KAYTTAJA int AUTO_INCREMENT,
+	ROOLI varchar(15) not null,
+	primary key (ID_KAYTTAJA)
+);
+
+create table OPISKELIJA (
+	ID_KAYTTAJA int,
+	ONRO int not null,
+	NIMI varchar(50) not null,
+	PAAAINE varchar(50) not null,
+	SALASANA varchar(255) not null,
+	unique (ONRO),
+	primary key (ID_KAYTTAJA),
+	foreign key (ID_KAYTTAJA) references KAYTTAJA
+);
+
+create table OPETTAJA (
+	ID_KAYTTAJA int,
+	ONRO int not null,
+	NIMI varchar(50) not null,
+	SALASANA varchar(255) not null,
+	unique (ONRO),
+	primary key (ID_KAYTTAJA),
+	foreign key (ID_KAYTTAJA) references KAYTTAJA
+);

@@ -13,7 +13,9 @@ use App\Core\App;
 
 class User extends Model
 {
-    public $name;
-    public $email;
-    public $password;
+    protected static $tableName = 'KAYTTAJA';
+    protected static $primaryKey = 'ID_KAYTTAJA';
+
+    public $ID_KAYTTAJA;
+    public $ROOLI;
 }
