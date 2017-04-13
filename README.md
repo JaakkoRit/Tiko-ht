@@ -221,4 +221,48 @@ Nyt voitte komentorivillä navigoida kansioon `C:\wamp\www` ja syöttää komenn
 
 ## 4. SourceTree
 
-https://www.sourcetreeapp.com/
+Ladataan osoitteesta https://www.sourcetreeapp.com/.
+
+Aina kun ryhdytte luomaan uutta ominaisuutta projektiimme, teette itsellenne uuden branchin. Tätä branchia voitte muokata vapaasti ja tekemänne muutokset voitte hyväksyä klikkaamalla "stage" ja sitten "commit." 
+
+Kun ominaisuutenne on valmis, tulee teidän klikata hiirean oikealla napilla "originia" kohdasta "remotes" ja valita "Fetch from origin." Tämä tarkistaa lokaalin master-koodinne. Master-branchissa näkyy nuoli, jos se ei ole ajan tasalla. Tällöin teidän tulee vaihtaa nykyinen branchinne masteriin tuplaklikkaamalla master-branchia. Tämän jälkeen klikkaatte ylhäältä "Pull" ja mergeette masteriinne repon päivitetyn koodin. Sitten takaisin omaan branchiinne, mutta tällä kertaa ette valitse "merge," vaan "rebase." Jos koodissanne ilmenee konflikteja, tulee teidän korjata ne. 
+
+Korjausten jälkeen on myös oma branchinne ajan tasalla, jolloin voitte "pushata" branchinne repoon. Tällöin branchinne näkyy repon github-sivulla, josta voitte luoda "Pull Requestin." Pull requ tarkastetaan, ja jos kaikki on ok, mergetään masteriin.
+
+# Admin-rekisteröinti ja -kirjautuminen
+
+## 1. Rekisteröinti
+
+Adminin rekisteröintiä varten tarvitsemme:
+
+	1. GET- ja POST-reitin routes.php-tiedostoon, joka ohjaa pyynnön tietyn kontrollerin tietylle metodilla.
+	2. Kontrollerin ja kontrollerille metodin, jotka vastaavat pyyntöön.
+	3. MySQL-taulun nimeltä esim. YLLAPITAJA
+	4. Luokan, joka vastaa YLLAPITAJA taulua
+	5. Näkymän, joka näyttää lomakkeen, jolla uusi admin rekisteröidään.
+
+### 1.1
+
+Tässä kohtaa on helppo ottaa mallia muista reiteistä. Osoitteina voi olla esim. `/admin-registration` ja kontrollerina voidaan käyttää esim. jo olemassa olevaa `DevControlleria`. Metodi voisi olla esim. `createAdmin`.
+
+### 1.2
+
+Luodaan vain uusi metodi `DevControlleriin`. Metodin ei tarvitse tehdä mitään muuta kuin palauttaa näkymä nimeltä esim. `admin-registration (.view.php)`.
+
+### 1.3
+
+Mallia voi ottaa jo olemassa olevista tauluista. YLLAPITAJAN sarakkeet voivat olla esim. `ID_KAYTTAJA`, `NIMI` ja `SALASANA`.
+
+### 1.4
+
+Jälleen voi ottaa mallia muista luokista. Tulee määritellä `protected static` attribuutit taulun nimelle ja avaimelle. Näiden lisäksi myös `public` attribuutit jokaista taulun saraketta kohden. Attribuuttien nimet tulee vastata sarakkeiden nimiä. Varmista, että luokkaa perii `Model`-luokan, ja että luokkaa kuuluu samaan nimiavaruuteen kuin muutkin luokat.
+
+### 1.5
+
+Näkymän tulee `requireta` header-, footer-, message- ja errors-tiedostot. Näkymän tulee sisältää `form`, `inputit` ja `submit-buttonin`. Mallia voi ottaa muista näkymistä. `Formin` tulee lähettää POST-pyyntö rekisteröityyn osoitteeseen.
+
+Kontrollerin metodin tulee käsitellä lähetetty POST-pyyntö. Lähetetyt tiedot tulee aluksi validoida. Tämän jälkeen luodaan uusi rivi KAYTTAJA-tauluun User-luokan avulla ja luodaan uusi rivi YLLAPITAJA-tauluun Admin-luokan avulla. Ylläpitäjän `ID_KAYTTAJA` tulee luodulta User-oliolta. Mallia voi ottaa muista kontrollerin metodeista.
+
+## 2. Kirjautuminen
+
+Prosessi on hyvin samankaltainen. Kirjautumista varten kannattaa luoda uusi kontrolleri esim. `AdminController`, joka vastaa pyyntöihin. Metodi, joka vastaa POST-pyyntöön etsii YLLAPITAJA-taulusta rivin, joka vastaa syötettyä nimeä. Tämän lisäksi salasana verifioidaan, ja jos syötetyt tiedot ovat oikein, lisätään käyttäjän nimi istunnon muuttujaan: `$_SESSION['nimi] = $admin->NIMI`. Istunnon muuttujat ovat tallessa siis koko istunnon ajan (eli kunnes istunto tuhotaan(=kirjaudutaan ulos) tai istunto sulkeutuu automaattisesti tietyn ajan kuluttua).
