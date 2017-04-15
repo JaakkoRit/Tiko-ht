@@ -24,3 +24,11 @@ create table OPETTAJA (
 	primary key (ID_KAYTTAJA),
 	foreign key (ID_KAYTTAJA) references KAYTTAJA
 );
+create table YLLAPITAJA(
+	ID_KAYTTAJA int,
+	NIMI varchar(50) not null,
+	SALASANA varchar(255) not null,
+	unique (NIMI),
+	primary key (ID_KAYTTAJA),
+	foreign key (ID_KAYTTAJA) references KAYTTAJA
+);
