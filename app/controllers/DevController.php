@@ -5,6 +5,7 @@ namespace App\App\Controllers;
 
 use App\App\Models\Student;
 use App\App\Models\Teacher;
+use App\App\Models\Admin;
 use App\App\Models\User;
 use App\Core\App;
 use App\Core\Validator;
@@ -113,6 +114,31 @@ class DevController
             'SALASANA' => password_hash($req->get('salasana'), PASSWORD_DEFAULT)
         ]);
 
+        header('Location: /');
+    }
+    public function createAdmin()
+    {
+        return view('admin-registration');
+    }
+    public function saveAdmin(){
+        $req = App::get('request');
+
+        $errors = (new Validator([
+            'nimi' => 'required',
+            'salasana' => 'required'
+        ]))->validate();
+        if(count($errors) > 0){
+            return view('admin-registration', compact('errors'));
+        }
+        $userId = User::create([
+            'ROOLI' => 'admin'
+        ]);
+        $user = User::find($userId);
+        Admin::create([
+            'ID_KAYTTAJA' => $user->ID_KAYTTAJA,
+            'NIMI' => $req->get('nimi'),
+            'SALASANA' => password_hash($req->get('salasana'), PASSWORD_DEFAULT)
+        ]);
         header('Location: /');
     }
 
