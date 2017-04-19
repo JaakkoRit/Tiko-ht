@@ -24,6 +24,7 @@ create table OPETTAJA (
 	primary key (ID_KAYTTAJA),
 	foreign key (ID_KAYTTAJA) references KAYTTAJA
 );
+
 create table YLLAPITAJA(
 	ID_KAYTTAJA int,
 	NIMI varchar(50) not null,
@@ -32,3 +33,71 @@ create table YLLAPITAJA(
 	primary key (ID_KAYTTAJA),
 	foreign key (ID_KAYTTAJA) references KAYTTAJA
 );
+
+
+create table TEHTAVA (
+	ID_TEHTAVA int AUTO_INCREMENT,
+	ID_KAYTTAJA int not null,
+	LUOMPVM date not null,
+	KYSELYTYYPPI char(6),
+	KUVAUS varchar(255),
+	primary key (ID_TEHTAVA),
+	foreign key (ID_KAYTTAJA) references
+	KAYTTAJA,
+	check (KYSELYTYYPPI = 'SELECT' or
+	KYSELYTYYPPI = 'INSERT' or KYSELYTYYPPI =
+	'DELETE' or KYSELYTYYPPI = 'UPDATE')
+);
+
+create table ESIMVASTAUS (
+	ID_TEHTAVA int not null,
+	VASTAUS varchar(1000),
+	foreign key (ID_TEHTAVA) references TEHTAVA
+);
+
+create table TEHTAVALISTA (
+	ID_TLISTA int AUTO_INCREMENT,
+	ID_KAYTTAJA int not null,
+	KUVAUS varchar(255),
+	LUOMPVM date not null,
+	primary key (ID_TLISTA),
+	foreign key (ID_KAYTTAJA) references KAYTTAJA
+);
+
+create table TEHTAVALISTANTEHTAVA (
+	ID_TLISTA int not null,
+	ID_TEHTAVA int not null
+);
+
+create table SESSIO (
+	ID_SESSIO int AUTO_INCREMENT,
+	ID_KAYTTAJA int not null,
+	ID_TLISTA int not null,
+	ALKAIKA time,
+	LOPAIKA time,
+	primary key (ID_SESSIO),
+	foreign key (ID_KAYTTAJA) references
+	KAYTTAJA,
+	foreign key (ID_TLISTA) references
+	TEHTAVALISTA
+);
+
+INSERT INTO `tiko`.`tehtavalista` (`ID_KAYTTAJA`, `KUVAUS`, `LUOMPVM`) VALUES ('2', 'T‰m‰ on testikuvaus.', '2017-04-18');
+INSERT INTO `tiko`.`tehtava` (`ID_KAYTTAJA`, `LUOMPVM`, `KYSELYTYYPPI`, `KUVAUS`) VALUES ('2', '2017-04-18', 'SELECT', 'Valitse opettajien nimet');
+INSERT INTO `tiko`.`tehtava` (`ID_KAYTTAJA`, `LUOMPVM`, `KYSELYTYYPPI`, `KUVAUS`) VALUES ('2', '2017-04-18', 'SELECT', 'Valitse opettajien nimet');
+INSERT INTO `tiko`.`tehtava` (`ID_KAYTTAJA`, `LUOMPVM`, `KYSELYTYYPPI`, `KUVAUS`) VALUES ('2', '2017-04-18', 'SELECT', 'Valitse opettajien nimet');
+INSERT INTO `tiko`.`tehtava` (`ID_KAYTTAJA`, `LUOMPVM`, `KYSELYTYYPPI`, `KUVAUS`) VALUES ('2', '2017-04-18', 'SELECT', 'Valitse opettajien nimet');
+INSERT INTO `tiko`.`tehtava` (`ID_KAYTTAJA`, `LUOMPVM`, `KYSELYTYYPPI`, `KUVAUS`) VALUES ('2', '2017-04-18', 'SELECT', 'Valitse opettajien nimet');
+UPDATE `tiko`.`tehtava` SET `KUVAUS`='Valitse opiskelijoiden nimet, joilla p‰‰aineena on \'TKO\'' WHERE  `ID_TEHTAVA`=2;
+UPDATE `tiko`.`tehtava` SET `KUVAUS`='Mitk‰ ovat \'Villen\' suorittamien kurssien arvosanat?' WHERE  `ID_TEHTAVA`=3;
+UPDATE `tiko`.`tehtava` SET `KYSELYTYYPPI`='INSERT', `KUVAUS`='Lis‰‰ opiskelija Matti tietokantaan. Matin opiskelijanumero on 1234 ja p‰‰aine VT' WHERE  `ID_TEHTAVA`=4;
+UPDATE `tiko`.`tehtava` SET `KYSELYTYYPPI`='DELETE', `KUVAUS`='Poista opiskelija, jonka numero on 1234' WHERE  `ID_TEHTAVA`=5;
+INSERT INTO `tiko`.`tehtavalistantehtava` (`ID_TLISTA`, `ID_TEHTAVA`) VALUES ('1', '1');
+INSERT INTO `tiko`.`tehtavalistantehtava` (`ID_TLISTA`, `ID_TEHTAVA`) VALUES ('1', '1');
+INSERT INTO `tiko`.`tehtavalistantehtava` (`ID_TLISTA`, `ID_TEHTAVA`) VALUES ('1', '1');
+INSERT INTO `tiko`.`tehtavalistantehtava` (`ID_TLISTA`, `ID_TEHTAVA`) VALUES ('1', '1');
+INSERT INTO `tiko`.`tehtavalistantehtava` (`ID_TLISTA`, `ID_TEHTAVA`) VALUES ('1', '1');
+UPDATE `tiko`.`tehtavalistantehtava` SET `ID_TEHTAVA`='2' WHERE  `ID_TLISTA`=1 AND `ID_TEHTAVA`=1 LIMIT 1;
+UPDATE `tiko`.`tehtavalistantehtava` SET `ID_TEHTAVA`='3' WHERE  `ID_TLISTA`=1 AND `ID_TEHTAVA`=1 LIMIT 1;
+UPDATE `tiko`.`tehtavalistantehtava` SET `ID_TEHTAVA`='4' WHERE  `ID_TLISTA`=1 AND `ID_TEHTAVA`=1 LIMIT 1;
+UPDATE `tiko`.`tehtavalistantehtava` SET `ID_TEHTAVA`='5' WHERE  `ID_TLISTA`=1 AND `ID_TEHTAVA`=1 LIMIT 1;

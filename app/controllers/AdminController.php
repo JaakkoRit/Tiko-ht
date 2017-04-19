@@ -24,6 +24,7 @@ class AdminController
         $admin = Admin::findWhere('NIMI', $req->get('nimi'));
 
         if ($admin && password_verify($req->get('salasana'), $admin->SALASANA)) {
+            $_SESSION['id_kayttaja'] = $admin->ID_KAYTTAJA;
             $_SESSION['nimi'] = $admin->NIMI;
 
             header('Location: /');

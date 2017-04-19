@@ -49,6 +49,28 @@ abstract class Model
 			->getOne(get_called_class());
 	}
 
+    public static function findAllWhere($field, $value)
+    {
+        return App::get('database')
+            ->query("SELECT * FROM "
+                . static::getTableName()
+                . " WHERE " . $field . " = :id")
+            ->bind(':id', $value)
+            ->getAll(get_called_class());
+    }
+
+    public static function findAllTasksFromTaskList($value)
+    {
+        return App::get('database')
+            ->query("SELECT T.ID_TEHTAVA, T.ID_KAYTTAJA, T.LUOMPVM, T.KYSELYTYYPPI, T.KUVAUS"
+                . " FROM TEHTAVA T, TEHTAVALISTA TL, TEHTAVALISTANTEHTAVA TLT"
+                . " WHERE T.ID_TEHTAVA = TLT.ID_TEHTAVA AND TLT.ID_TLISTA = TL.ID_TLISTA"
+                . " AND TL.ID_TLISTA = :id"
+                . " ORDER BY T.ID_TEHTAVA ASC")
+            ->bind(':id', $value)
+            ->getAll(get_called_class());
+    }
+
 	public static function create($data)
 	{
 		$fieldNames = implode(', ', array_keys($data));

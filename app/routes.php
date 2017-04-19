@@ -2,6 +2,7 @@
 
 $router->get('/', 'HomeController@index');
 
+$router->get('/student-home', 'StudentController@index');
 $router->get('/student-login', 'StudentController@create');
 $router->post('/student-login', 'StudentController@save');
 $router->get('/logout', 'StudentController@destroy');
@@ -19,3 +20,5 @@ $router->post('/teacher-registration', 'DevController@save2');
 $router->get('/admin-registration', 'DevController@createAdmin');
 $router->post('/admin-registration', 'DevController@saveAdmin');
 
+$router->get('/session', 'SessionController@show');
+$router->post('/session', 'SessionController@save');

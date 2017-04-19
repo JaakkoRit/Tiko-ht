@@ -24,6 +24,7 @@ class TeacherController
         $teacher = Teacher::findWhere('ONRO', $req->get('onro'));
 
         if ($teacher && password_verify($req->get('salasana'), $teacher->SALASANA)) {
+            $_SESSION['id_kayttaja'] = $teacher->ID_KAYTTAJA;
             $_SESSION['nimi'] = $teacher->NIMI;
             $_SESSION['onro'] = $teacher->ONRO;
 
