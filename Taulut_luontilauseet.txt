@@ -55,6 +55,16 @@ create table ESIMVASTAUS (
 	foreign key (ID_TEHTAVA) references TEHTAVA
 );
 
+create table TEHTAVASUORITUS (
+	ID_TEHTAVA int not null,
+	ID_SESSIO int not null,
+	ALKAIKA time,
+	LOPAIKA time,
+	primary key (ID_TEHTAVA, ID_SESSIO),
+	foreign key (ID_TEHTAVA) references TEHTAVA,
+	foreign key (ID_SESSIO) references SESSIO
+);
+
 create table TEHTAVALISTA (
 	ID_TLISTA int AUTO_INCREMENT,
 	ID_KAYTTAJA int not null,
@@ -80,6 +90,21 @@ create table SESSIO (
 	KAYTTAJA,
 	foreign key (ID_TLISTA) references
 	TEHTAVALISTA
+);
+
+create table YRITYS (
+	ID_TEHTAVA int not null,
+	ID_SESSIO int not null,
+	YRITYSKERTA int not null,
+	VASTAUS varchar(1000),
+	ALKAIKA time,
+	LOPAIKA time,
+	OLIKOOIKEIN boolean,
+	primary key (ID_TEHTAVA, ID_SESSIO,
+	YRITYSKERTA),
+	foreign key (ID_TEHTAVA) references TEHTAVA,
+	foreign key (ID_SESSIO) references SESSIO,
+	check (YRITYSKERTA between 0 and 2)
 );
 
 INSERT INTO `tiko`.`tehtavalista` (`ID_KAYTTAJA`, `KUVAUS`, `LUOMPVM`) VALUES ('2', 'Tämä on testikuvaus.', '2017-04-18');

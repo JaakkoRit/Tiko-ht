@@ -39,7 +39,7 @@ abstract class Model
 			->getOne(get_called_class());
 	}
 
-	public static function findWhere($field, $value)
+    public static function findWhere($field, $value)
 	{
 		return App::get('database')
 			->query("SELECT * FROM "
@@ -48,6 +48,30 @@ abstract class Model
 			->bind(':id', $value)
 			->getOne(get_called_class());
 	}
+
+    public static function findTaskCompletion($field, $value, $field2, $value2)
+    {
+        return App::get('database')
+            ->query("SELECT * FROM "
+                . static::getTableName()
+                . " WHERE " . $field . " = :id"
+                . " AND " . $field2 . " = :id2")
+            ->bind(':id', $value)
+            ->bind(':id2', $value2)
+            ->getOne(get_called_class());
+    }
+
+    public static function findAllAttempts($field, $value, $field2, $value2)
+    {
+        return App::get('database')
+            ->query("SELECT * FROM "
+                . static::getTableName()
+                . " WHERE " . $field . " = :id"
+                . " AND " . $field2 . " = :id2")
+            ->bind(':id', $value)
+            ->bind(':id2', $value2)
+            ->getAll(get_called_class());
+    }
 
     public static function findAllWhere($field, $value)
     {
@@ -118,6 +142,20 @@ abstract class Model
 
 		$statement->execute();
 	}
+
+    public static function updateTaskCompletion($idTask, $idSession, $time)
+    {
+        $sql = 'UPDATE ' . static::getTableName() . ' SET ';
+        $sql .= 'LOPAIKA = :time';
+        $sql .= ' WHERE ID_TEHTAVA = :id';
+        $sql .= ' AND ID_SESSIO = :id2';
+        $statement = App::get('database')
+            ->query($sql);
+        $statement->bind(':time', $time);
+        $statement->bind(':id', $idTask);
+        $statement->bind(':id2', $idSession);
+        $statement->execute();
+    }
 
 	public function destroy()
 	{

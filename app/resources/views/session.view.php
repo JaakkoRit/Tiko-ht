@@ -12,6 +12,8 @@
         </div>
 
         <input type="hidden" value="<?= $task->ID_TEHTAVA; ?>" name="tehtavaId">
+        <input type="hidden" value="<?= $_GET['sessionid']; ?>" name="sessionId">
+        <input type="hidden" value="<?= $timeAtStart; ?>" name="timeAtStart">
         <input type="hidden" value="/session?sessionid=<?= $sessionId; ?>&taskIndex=<?= $taskIndex+1; ?>" name="seuraavaSivu">
 
         <div class="field is-grouped">
