@@ -3,10 +3,8 @@
 namespace App\App\Controllers;
 
 use App\App\Models\Answer;
-use App\App\Models\Attempt;
 use App\App\Models\Session;
 use App\App\Models\Task;
-use App\App\Models\TaskCompletion;
 use App\App\Models\TaskList;
 use App\Core\App;
 use App\Core\Validator;
@@ -24,34 +22,15 @@ class SessionController
         $taskList = TaskList::find($session->ID_TLISTA);
         $tasks = Task::findAllTasksFromTaskList($taskList->ID_TLISTA);
 
-        if ($taskIndex >= count($tasks)) {
-            Session::update($session->ID_SESSIO, [
-                'LOPAIKA' => date("Y-m-d H:i:s")
-            ]);
-
+        if (! anyTasksLeft($taskIndex, $tasks, $session))
+        {
             header('Location: /student-home');
-        }
-
-        if ($taskIndex == 0) {
-            Session::update($session->ID_SESSIO, [
-                'ALKAIKA' => date("Y-m-d H:i:s")
-            ]);
         }
 
         $timeAtStart = date("Y-m-d H:i:s");
 
-        $taskCompletion = TaskCompletion::findTaskCompletion(
-            'ID_SESSIO', $sessionId,
-            'ID_TEHTAVA', $tasks[$taskIndex]->ID_TEHTAVA
-        );
-
-        if (! $taskCompletion) {
-            TaskCompletion::create([
-                'ID_TEHTAVA' => $tasks[$taskIndex]->ID_TEHTAVA,
-                'ID_SESSIO' => $sessionId,
-                'ALKAIKA' => $timeAtStart
-            ]);
-        }
+        setSessionTimeOfBeginning($taskIndex, $session);
+        createTaskCompletion($sessionId, $tasks, $taskIndex, $timeAtStart);
 
         $task = $tasks[$taskIndex];
 
@@ -75,62 +54,45 @@ class SessionController
 
         $answers = Answer::findAllWhere('ID_TEHTAVA', $req->get('tehtavaId'));
 
-        $lowerCaseAnswersArray = [];
-
-        foreach ($answers as $answer) {
-            $lowerCaseAnswersArray[] = strtolower($answer->VASTAUS);
-        }
-
+        $lowerCaseAnswersArray = answersLowerCase($answers);
         $lowerCaseAnswer = strtolower($req->get('vastaus'));
 
-        if (in_array($lowerCaseAnswer, $lowerCaseAnswersArray)) {
+        $db = App::get('database');
 
-            $attempts = Attempt::findAllAttempts('ID_TEHTAVA', $req->get('tehtavaId'), 'ID_SESSIO', $req->get('sessionId'));
-
-            Attempt::create([
-                'ID_TEHTAVA' => $req->get('tehtavaId'),
-                'ID_SESSIO' => $req->get('sessionId'),
-                'YRITYSKERTA' => count($attempts)+1,
-                'VASTAUS' => $lowerCaseAnswer,
-                'ALKAIKA' => $req->get('timeAtStart'),
-                'LOPAIKA' => date("Y-m-d H:i:s"),
-                'OLIKOOIKEIN' => true
-            ]);
-
-            TaskCompletion::updateTaskCompletion(
-                $req->get('tehtavaId'),
-                $req->get('sessionId'),
-                date("Y-m-d H:i:s")
-            );
-
-            header("Location: $nextPage");
-        } else {
-
-            $attempts = Attempt::findAllAttempts('ID_TEHTAVA', $req->get('tehtavaId'), 'ID_SESSIO', $req->get('sessionId'));
-
-            Attempt::create([
-                'ID_TEHTAVA' => $req->get('tehtavaId'),
-                'ID_SESSIO' => $req->get('sessionId'),
-                'YRITYSKERTA' => count($attempts)+1,
-                'VASTAUS' => $lowerCaseAnswer,
-                'ALKAIKA' => $req->get('timeAtStart'),
-                'LOPAIKA' => date("Y-m-d H:i:s"),
-                'OLIKOOIKEIN' => false
-            ]);
-
-            if (count($attempts) >= 2) {
-                TaskCompletion::updateTaskCompletion(
-                    $req->get('tehtavaId'),
-                    $req->get('sessionId'),
-                    date("Y-m-d H:i:s")
-                );
-
+        if (correctAnswer($lowerCaseAnswer, $lowerCaseAnswersArray))
+        {
+            $db->beginTransaction();
+            try {
+                createAttempt($req, $lowerCaseAnswer, true);
+                updateTaskCompletion($req);
+                $db->commit();
                 header("Location: $nextPage");
-            } else {
-                header("Location: $previousPage");
+            }
+            catch (\Exception $e) {
+                $db->rollback();
+            }
+        }
+        else
+        {
+            $db->beginTransaction();
+            try {
+                $attemptCount = createAttempt($req, $lowerCaseAnswer, false);
+                if ($attemptCount >= 2)
+                {
+                    updateTaskCompletion($req);
+                    $db->commit();
+                    header("Location: $nextPage");
+                }
+                else
+                {
+                    $db->commit();
+                    header("Location: $previousPage");
+                }
+            }
+            catch (\Exception $e) {
+                $db->rollback();
             }
         }
 
     }
-
 }
