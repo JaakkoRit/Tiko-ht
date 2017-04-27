@@ -60,4 +60,16 @@ class QueryBuilder {
 	public function lastInsertId() {
 		return $this->pdo->lastInsertId();
 	}
+
+    public function beginTransaction() {
+        $this->pdo->beginTransaction();
+	}
+
+    public function commit() {
+        $this->pdo->commit();
+    }
+
+    public function rollback() {
+	    $this->pdo->rollBack();
+    }
 }

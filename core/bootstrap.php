@@ -7,6 +7,7 @@ use App\Core\Router;
 use Symfony\Component\HttpFoundation\Request;
 
 require __DIR__ . '/helpers.php';
+require __DIR__ . '/miscFunctions.php';
 
 App::bind('config', require __DIR__ . '/../core/config.php');
 

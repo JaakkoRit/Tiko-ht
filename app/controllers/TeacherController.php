@@ -10,6 +10,7 @@ namespace App\App\Controllers;
 
 use App\Core\App;
 use App\App\Models\Teacher;
+use App\App\Models\User;
 
 class TeacherController
 {
@@ -22,10 +23,13 @@ class TeacherController
     {
         $req = App::get('request');
         $teacher = Teacher::findWhere('ONRO', $req->get('onro'));
+        $user = User::find($teacher->ID_KAYTTAJA);
 
         if ($teacher && password_verify($req->get('salasana'), $teacher->SALASANA)) {
+            $_SESSION['id_kayttaja'] = $teacher->ID_KAYTTAJA;
             $_SESSION['nimi'] = $teacher->NIMI;
             $_SESSION['onro'] = $teacher->ONRO;
+            $_SESSION['rooli'] = $user->ROOLI;
 
             header('Location: /');
         }

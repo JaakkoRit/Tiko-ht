@@ -39,7 +39,7 @@ abstract class Model
 			->getOne(get_called_class());
 	}
 
-	public static function findWhere($field, $value)
+    public static function findWhere($field, $value)
 	{
 		return App::get('database')
 			->query("SELECT * FROM "
@@ -48,6 +48,52 @@ abstract class Model
 			->bind(':id', $value)
 			->getOne(get_called_class());
 	}
+
+    public static function findTaskCompletion($field, $value, $field2, $value2)
+    {
+        return App::get('database')
+            ->query("SELECT * FROM "
+                . static::getTableName()
+                . " WHERE " . $field . " = :id"
+                . " AND " . $field2 . " = :id2")
+            ->bind(':id', $value)
+            ->bind(':id2', $value2)
+            ->getOne(get_called_class());
+    }
+
+    public static function findAllAttempts($field, $value, $field2, $value2)
+    {
+        return App::get('database')
+            ->query("SELECT * FROM "
+                . static::getTableName()
+                . " WHERE " . $field . " = :id"
+                . " AND " . $field2 . " = :id2")
+            ->bind(':id', $value)
+            ->bind(':id2', $value2)
+            ->getAll(get_called_class());
+    }
+
+    public static function findAllWhere($field, $value)
+    {
+        return App::get('database')
+            ->query("SELECT * FROM "
+                . static::getTableName()
+                . " WHERE " . $field . " = :id")
+            ->bind(':id', $value)
+            ->getAll(get_called_class());
+    }
+
+    public static function findAllTasksFromTaskList($value)
+    {
+        return App::get('database')
+            ->query("SELECT T.ID_TEHTAVA, T.ID_KAYTTAJA, T.LUOMPVM, T.KYSELYTYYPPI, T.KUVAUS"
+                . " FROM TEHTAVA T, TEHTAVALISTA TL, TEHTAVALISTANTEHTAVA TLT"
+                . " WHERE T.ID_TEHTAVA = TLT.ID_TEHTAVA AND TLT.ID_TLISTA = TL.ID_TLISTA"
+                . " AND TL.ID_TLISTA = :id"
+                . " ORDER BY T.ID_TEHTAVA ASC")
+            ->bind(':id', $value)
+            ->getAll(get_called_class());
+    }
 
 	public static function create($data)
 	{
@@ -96,6 +142,20 @@ abstract class Model
 
 		$statement->execute();
 	}
+
+    public static function updateTaskCompletion($idTask, $idSession, $time)
+    {
+        $sql = 'UPDATE ' . static::getTableName() . ' SET ';
+        $sql .= 'LOPAIKA = :time';
+        $sql .= ' WHERE ID_TEHTAVA = :id';
+        $sql .= ' AND ID_SESSIO = :id2';
+        $statement = App::get('database')
+            ->query($sql);
+        $statement->bind(':time', $time);
+        $statement->bind(':id', $idTask);
+        $statement->bind(':id2', $idSession);
+        $statement->execute();
+    }
 
 	public function destroy()
 	{
