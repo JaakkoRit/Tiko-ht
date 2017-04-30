@@ -22,3 +22,6 @@ $router->post('/admin-registration', 'DevController@saveAdmin');
 
 $router->get('/session', 'SessionController@show');
 $router->post('/session', 'SessionController@save');
+
+$router->get('/session-report', 'ReportController@showSessionRaport');
+$router->get('/tasklistsession-report', 'ReportController@showTaskListSessionReport');
