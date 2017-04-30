@@ -14,8 +14,8 @@ class ReportController
         if(Gate::hasRole('opiskelija'))
             return view('index');
         else {
+            $tasklistArray = TaskList::findAllWhere("ID_KAYTTAJA", $_SESSION['id_kayttaja']);
             $sessionArray = Session::all();
-            $tasklistArray = TaskList::all();
             $studentArray = Student::all();
             $attemptArray = Attempt::all();
             return view('session-report', compact('sessionArray', 'attemptArray', 'studentArray', 'tasklistArray'));
@@ -25,10 +25,9 @@ class ReportController
         if(Gate::hasRole('opiskelija'))
             return view('index');
         else{
-            $tasklistArray = TaskList::all();
+            $tasklistArray = TaskList::findAllWhere("ID_KAYTTAJA", $_SESSION['id_kayttaja']);
             $sessionArray = Session::all();
-            $attemptArray = Attempt::all();
-            return view('tasklistsession-report', compact('tasklistArray', 'sessionArray', 'attemptArray'));
+            return view('tasklistsession-report', compact('tasklistArray', 'sessionArray'));
         }
     }
 }
