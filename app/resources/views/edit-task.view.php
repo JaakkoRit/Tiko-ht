@@ -8,7 +8,7 @@
 
         <div class="field">
             <label class="label">Tehtävän kuvaus</label>
-            <p class="control has-icon has-icon-right">
+            <p class="control">
                 <input class="input" name="kuvaus" type="text" value="<?= $task->KUVAUS; ?>">
             </p>
         </div>
@@ -18,9 +18,12 @@
         </div>
 
         <?php $index = 0; foreach ($answers as $answer) : ?>
-            <div class="field">
-                <p class="control has-icon has-icon-right">
+            <div class="field is-grouped">
+                <p class="control">
                     <input class="input" name="vastaus<?= $index; ?>" type="text" value="<?= $answer->VASTAUS; ?>">
+                </p>
+                <p class="control">
+                    <a href="" class="button is-danger is-right">Poista</a>
                 </p>
             </div>
             <?php $index += 1; ?>

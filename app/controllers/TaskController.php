@@ -77,6 +77,10 @@ class TaskController
     {
         $req = App::get('request');
 
+        $errors = (new Validator([
+
+        ]))->validate();
+
         $index = 0;
         $array = [];
         $continue = true;
