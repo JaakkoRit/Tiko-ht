@@ -23,6 +23,10 @@
         </div>
 
     </form>
+    <hr>
+    <?php echo $courses;?>
+    <?php echo $students;?>
+    <?php echo $courseCompletion;?>
 
 <?php require 'message.view.php'; ?>
 

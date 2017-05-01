@@ -16,6 +16,20 @@ abstract class Model
 
 		return static::$tableName;
 	}
+	public static function selectFrom($table, $selectFields){
+	    return "SELECT $selectFields FROM $table";
+    }
+    public static function selectColumnNames($table){
+        return "SELECT `COLUMN_NAME` 
+                FROM `INFORMATION_SCHEMA`.`COLUMNS` 
+                WHERE `TABLE_SCHEMA`='tiko' 
+                AND `TABLE_NAME`='$table'";
+    }
+    public static function rawQuery($query){
+        return App::get('database')
+            ->query($query)
+            ->getAll(get_called_class());
+    }
 
 	public static function all($fields = [])
 	{

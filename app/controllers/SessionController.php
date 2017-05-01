@@ -27,6 +27,10 @@ class SessionController
             header('Location: /student-home');
         }
 
+        $courses = arrayToHtml('kurssit');
+        $students = arrayToHtml('opiskelijat');
+        $courseCompletion = arrayToHtml('suoritukset');
+
         $timeAtStart = date("Y-m-d H:i:s");
 
         setSessionTimeOfBeginning($taskIndex, $session);
@@ -34,7 +38,7 @@ class SessionController
 
         $task = $tasks[$taskIndex];
 
-        return view('session', compact('task', 'taskIndex', 'sessionId', 'timeAtStart'));
+        return view('session', compact('task', 'taskIndex', 'sessionId', 'timeAtStart', 'courses', 'students', 'courseCompletion'));
     }
 
     public function save()
@@ -51,15 +55,21 @@ class SessionController
         if (count($errors) > 0) {
             header("Location: $previousPage");
         }
+        $db = App::get('database');
+        $exmplanswers = Answer::findAllWhere('ID_TEHTAVA', $req->get('tehtavaId'));
 
-        $answers = Answer::findAllWhere('ID_TEHTAVA', $req->get('tehtavaId'));
-
-        $lowerCaseAnswersArray = answersLowerCase($answers);
+        $lowerCaseAnswersArray = answersLowerCase($exmplanswers);
         $lowerCaseAnswer = strtolower($req->get('vastaus'));
 
-        $db = App::get('database');
+        $answer = Query::rawQuery($lowerCaseAnswer);
 
-        if (correctAnswer($lowerCaseAnswer, $lowerCaseAnswersArray))
+        $correct = null;
+        foreach($lowerCaseAnswersArray as $row){
+            $exmplAnswer = Query::rawQuery($row);
+            if($answer == $exmplAnswer)
+                $correct = true;
+        }
+        if ($correct)
         {
             $db->beginTransaction();
             try {

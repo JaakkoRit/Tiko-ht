@@ -3,6 +3,8 @@
 use App\App\Models\Session;
 use App\App\Models\TaskCompletion;
 use App\App\Models\Attempt;
+use App\App\Models\Query;
+use App\Core\App;
 
 function anyTasksLeft($taskIndex, $tasks, $session)
 {
@@ -85,4 +87,22 @@ function updateTaskCompletion($req) {
         $req->get('sessionId'),
         date("Y-m-d H:i:s")
     );
+}
+function arrayToHtml($tableName){
+    $table = Query::rawQuery(Session::selectFrom($tableName, '*'));
+    $columnNames = Query::rawQuery(Session::selectColumnNames($tableName));
+    $tableHtml = "<table style=\"width:100%\"><caption>$tableName</caption><tr>";
+    foreach($columnNames as $row) {
+        foreach ($row as $index)
+            $tableHtml .= "<th>" . $index . "</th>";
+    }
+    $tableHtml .= "</tr>";
+    foreach($table as $row){
+        $tableHtml .= "<tr>";
+        foreach($row as $index)
+            $tableHtml .= "<td>".$index."</td>";
+        $tableHtml .= "</tr>";
+    }
+    $tableHtml .= "</table><br>";
+    return $tableHtml;
 }
