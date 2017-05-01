@@ -27,6 +27,35 @@ class SessionController
             header('Location: /student-home');
         }
 
+        $db = App::get('database');
+        $courses = arrayToHtml(
+            $db ->query("SELECT * FROM kurssit")
+                ->getAll(get_called_class()),
+            $db ->query("SELECT `COLUMN_NAME` 
+                        FROM `INFORMATION_SCHEMA`.`COLUMNS` 
+                        WHERE `TABLE_SCHEMA`='tiko' 
+                        AND `TABLE_NAME`='kurssit';")
+                ->getAll(get_called_class()),
+            "kurssit");
+        $students = arrayToHtml(
+            $db ->query("SELECT * FROM opiskelijat")
+                ->getAll(get_called_class()),
+            $db ->query("SELECT `COLUMN_NAME` 
+                        FROM `INFORMATION_SCHEMA`.`COLUMNS` 
+                        WHERE `TABLE_SCHEMA`='tiko' 
+                        AND `TABLE_NAME`='opiskelijat';")
+                ->getAll(get_called_class()),
+            "opiskelijat");
+        $courseCompletion = arrayToHtml(
+            $db ->query("SELECT * FROM suoritukset")
+                ->getAll(get_called_class()),
+            $db ->query("SELECT `COLUMN_NAME` 
+                        FROM `INFORMATION_SCHEMA`.`COLUMNS` 
+                        WHERE `TABLE_SCHEMA`='tiko' 
+                        AND `TABLE_NAME`='suoritukset';")
+                ->getAll(get_called_class()),
+            "suoritukset");
+
         $timeAtStart = date("Y-m-d H:i:s");
 
         setSessionTimeOfBeginning($taskIndex, $session);
@@ -34,7 +63,7 @@ class SessionController
 
         $task = $tasks[$taskIndex];
 
-        return view('session', compact('task', 'taskIndex', 'sessionId', 'timeAtStart'));
+        return view('session', compact('task', 'taskIndex', 'sessionId', 'timeAtStart', 'courses', 'students', 'courseCompletion'));
     }
 
     public function save()
@@ -52,19 +81,18 @@ class SessionController
             header("Location: $previousPage");
         }
 
-        $explanswers = Answer::findAllWhere('ID_TEHTAVA', $req->get('tehtavaId'));
+        $exmplanswers = Answer::findAllWhere('ID_TEHTAVA', $req->get('tehtavaId'));
 
-        $lowerCaseAnswersArray = answersLowerCase($explanswers);
+        $lowerCaseAnswersArray = answersLowerCase($exmplanswers);
         $lowerCaseAnswer = strtolower($req->get('vastaus'));
 
         $db = App::get('database');
-        $answer = $db->query($lowerCaseAnswer);
+        $answer = $db->query($lowerCaseAnswer)->getAll(get_called_class());
 
         $correct = null;
         foreach($lowerCaseAnswersArray as $row){
-            $sql = $row->VASTAUS;
-            $explAnswer = $db->query($sql);
-            if($answer == $explAnswer)
+            $exmplAnswer = $db->query($row)->getAll(get_called_class());
+            if($answer == $exmplAnswer)
                 $correct = true;
         }
         if ($correct)

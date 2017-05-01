@@ -10,7 +10,9 @@
                 <textarea name="vastaus" class="textarea" placeholder="Vastaus"></textarea>
             </p>
         </div>
-
+        <?php echo $courses;?>
+        <?php echo $students;?>
+        <?php echo $courseCompletion;?>
         <input type="hidden" value="<?= $task->ID_TEHTAVA; ?>" name="tehtavaId">
         <input type="hidden" value="<?= $_GET['sessionid']; ?>" name="sessionId">
         <input type="hidden" value="<?= $timeAtStart; ?>" name="timeAtStart">
