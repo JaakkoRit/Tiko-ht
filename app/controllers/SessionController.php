@@ -34,7 +34,7 @@ class SessionController
 
         $task = $tasks[$taskIndex];
 
-        return view('session', compact('task', 'taskIndex', 'sessionId', 'timeAtStart', 'coursesTable', 'studentsTable', 'courseCompletionTable'));
+        return view('session', compact('task', 'taskIndex', 'sessionId', 'timeAtStart'));
     }
 
     public function save()
