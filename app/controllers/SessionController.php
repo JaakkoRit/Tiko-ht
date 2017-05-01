@@ -34,7 +34,7 @@ class SessionController
 
         $task = $tasks[$taskIndex];
 
-        return view('session', compact('task', 'taskIndex', 'sessionId', 'timeAtStart'));
+        return view('session', compact('task', 'taskIndex', 'sessionId', 'timeAtStart', 'coursesTable', 'studentsTable', 'courseCompletionTable'));
     }
 
     public function save()
@@ -52,14 +52,22 @@ class SessionController
             header("Location: $previousPage");
         }
 
-        $answers = Answer::findAllWhere('ID_TEHTAVA', $req->get('tehtavaId'));
+        $explanswers = Answer::findAllWhere('ID_TEHTAVA', $req->get('tehtavaId'));
 
-        $lowerCaseAnswersArray = answersLowerCase($answers);
+        $lowerCaseAnswersArray = answersLowerCase($explanswers);
         $lowerCaseAnswer = strtolower($req->get('vastaus'));
 
         $db = App::get('database');
+        $answer = $db->query($lowerCaseAnswer);
 
-        if (correctAnswer($lowerCaseAnswer, $lowerCaseAnswersArray))
+        $correct = null;
+        foreach($lowerCaseAnswersArray as $row){
+            $sql = $row->VASTAUS;
+            $explAnswer = $db->query($sql);
+            if($answer == $explAnswer)
+                $correct = true;
+        }
+        if ($correct)
         {
             $db->beginTransaction();
             try {
