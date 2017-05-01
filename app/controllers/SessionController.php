@@ -6,7 +6,6 @@ use App\App\Models\Answer;
 use App\App\Models\Session;
 use App\App\Models\Task;
 use App\App\Models\TaskList;
-use App\App\Models\Query;
 use App\Core\App;
 use App\Core\Validator;
 
@@ -28,27 +27,9 @@ class SessionController
             header('Location: /student-home');
         }
 
-        $courses = arrayToHtml(
-            Query::rawQuery("SELECT * FROM kurssit"),
-            Query::rawQuery("SELECT `COLUMN_NAME` 
-                        FROM `INFORMATION_SCHEMA`.`COLUMNS` 
-                        WHERE `TABLE_SCHEMA`='tiko' 
-                        AND `TABLE_NAME`='kurssit';"),
-            "kurssit");
-        $students = arrayToHtml(
-            Query::rawQuery("SELECT * FROM opiskelijat"),
-            Query::rawQuery("SELECT `COLUMN_NAME` 
-                        FROM `INFORMATION_SCHEMA`.`COLUMNS` 
-                        WHERE `TABLE_SCHEMA`='tiko' 
-                        AND `TABLE_NAME`='opiskelijat';"),
-            "opiskelijat");
-        $courseCompletion = arrayToHtml(
-            Query::rawQuery("SELECT * FROM suoritukset"),
-            Query::rawQuery("SELECT `COLUMN_NAME` 
-                        FROM `INFORMATION_SCHEMA`.`COLUMNS` 
-                        WHERE `TABLE_SCHEMA`='tiko' 
-                        AND `TABLE_NAME`='suoritukset';"),
-            "suoritukset");
+        $courses = arrayToHtml('kurssit');
+        $students = arrayToHtml('opiskelijat');
+        $courseCompletion = arrayToHtml('suoritukset');
 
         $timeAtStart = date("Y-m-d H:i:s");
 
