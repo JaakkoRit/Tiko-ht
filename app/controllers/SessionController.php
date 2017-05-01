@@ -6,6 +6,7 @@ use App\App\Models\Answer;
 use App\App\Models\Session;
 use App\App\Models\Task;
 use App\App\Models\TaskList;
+use App\App\Models\Query;
 use App\Core\App;
 use App\Core\Validator;
 
@@ -27,33 +28,26 @@ class SessionController
             header('Location: /student-home');
         }
 
-        $db = App::get('database');
         $courses = arrayToHtml(
-            $db ->query("SELECT * FROM kurssit")
-                ->getAll(get_called_class()),
-            $db ->query("SELECT `COLUMN_NAME` 
+            Query::rawQuery("SELECT * FROM kurssit"),
+            Query::rawQuery("SELECT `COLUMN_NAME` 
                         FROM `INFORMATION_SCHEMA`.`COLUMNS` 
                         WHERE `TABLE_SCHEMA`='tiko' 
-                        AND `TABLE_NAME`='kurssit';")
-                ->getAll(get_called_class()),
+                        AND `TABLE_NAME`='kurssit';"),
             "kurssit");
         $students = arrayToHtml(
-            $db ->query("SELECT * FROM opiskelijat")
-                ->getAll(get_called_class()),
-            $db ->query("SELECT `COLUMN_NAME` 
+            Query::rawQuery("SELECT * FROM opiskelijat"),
+            Query::rawQuery("SELECT `COLUMN_NAME` 
                         FROM `INFORMATION_SCHEMA`.`COLUMNS` 
                         WHERE `TABLE_SCHEMA`='tiko' 
-                        AND `TABLE_NAME`='opiskelijat';")
-                ->getAll(get_called_class()),
+                        AND `TABLE_NAME`='opiskelijat';"),
             "opiskelijat");
         $courseCompletion = arrayToHtml(
-            $db ->query("SELECT * FROM suoritukset")
-                ->getAll(get_called_class()),
-            $db ->query("SELECT `COLUMN_NAME` 
+            Query::rawQuery("SELECT * FROM suoritukset"),
+            Query::rawQuery("SELECT `COLUMN_NAME` 
                         FROM `INFORMATION_SCHEMA`.`COLUMNS` 
                         WHERE `TABLE_SCHEMA`='tiko' 
-                        AND `TABLE_NAME`='suoritukset';")
-                ->getAll(get_called_class()),
+                        AND `TABLE_NAME`='suoritukset';"),
             "suoritukset");
 
         $timeAtStart = date("Y-m-d H:i:s");
@@ -80,18 +74,17 @@ class SessionController
         if (count($errors) > 0) {
             header("Location: $previousPage");
         }
-
+        $db = App::get('database');
         $exmplanswers = Answer::findAllWhere('ID_TEHTAVA', $req->get('tehtavaId'));
 
         $lowerCaseAnswersArray = answersLowerCase($exmplanswers);
         $lowerCaseAnswer = strtolower($req->get('vastaus'));
 
-        $db = App::get('database');
-        $answer = $db->query($lowerCaseAnswer)->getAll(get_called_class());
+        $answer = Query::rawQuery($lowerCaseAnswer);
 
         $correct = null;
         foreach($lowerCaseAnswersArray as $row){
-            $exmplAnswer = $db->query($row)->getAll(get_called_class());
+            $exmplAnswer = Query::rawQuery($row);
             if($answer == $exmplAnswer)
                 $correct = true;
         }

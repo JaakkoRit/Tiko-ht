@@ -127,41 +127,72 @@ UPDATE `tiko`.`tehtavalistantehtava` SET `ID_TEHTAVA`='3' WHERE  `ID_TLISTA`=1 A
 UPDATE `tiko`.`tehtavalistantehtava` SET `ID_TEHTAVA`='4' WHERE  `ID_TLISTA`=1 AND `ID_TEHTAVA`=1 LIMIT 1;
 UPDATE `tiko`.`tehtavalistantehtava` SET `ID_TEHTAVA`='5' WHERE  `ID_TLISTA`=1 AND `ID_TEHTAVA`=1 LIMIT 1;
 
-create table opiskelijat(
-nro int not null,
-nimi varchar(50),
-p_aine varchar (10),
-primary key(nro)
+CREATE TABLE opiskelijat (
+
+nro INT,
+
+nimi VARCHAR(15) NOT NULL,
+
+p_aine VARCHAR(15) NOT NULL,
+
+PRIMARY KEY (nro)
+
 );
 
-create table kurssit(
-	id int not null,
-	nimi varchar(10),
-	opettaja varchar (10),
-	primary key(id)
+INSERT INTO opiskelijat VALUES (1, 'Maija', 'TKO');
+
+INSERT INTO opiskelijat VALUES (2, 'Ville', 'TKO');
+
+INSERT INTO opiskelijat VALUES (3, 'Kalle', 'VT');
+
+INSERT INTO opiskelijat VALUES (4, 'Liisa', 'VT');
+
+CREATE TABLE kurssit (
+
+id INT,
+
+nimi VARCHAR(15) NOT NULL,
+
+opettaja VARCHAR(15) NOT NULL,
+
+PRIMARY KEY (id)
+
 );
 
-create table suoritukset(
-	k_id int not null,
-	op_nro int not null,
-	arvosana int not null,
-	foreign key(op_nro) references kurssit
+INSERT INTO kurssit VALUES (1, 'tkp', 'KI');
+
+INSERT INTO kurssit VALUES (2, 'oope', 'JL');
+
+INSERT INTO kurssit VALUES (3, 'tiko', 'MJ');
+
+CREATE TABLE suoritukset (
+
+k_id INT,
+
+op_nro INT NOT NULL,
+
+arvosana INT NOT NULL,
+
+PRIMARY KEY (k_id, op_nro),
+
+FOREIGN KEY(k_id) REFERENCES kurssit,
+
+FOREIGN KEY(op_nro) REFERENCES opiskelijat
+
 );
 
-INSERT INTO `tiko`.`opiskelijat` (`nro`, `nimi`, `p_aine`) VALUES ('1', 'Maija', 'TKO');
-INSERT INTO `tiko`.`opiskelijat` (`nro`, `nimi`, `p_aine`) VALUES ('2', 'Ville', 'TKO');
-INSERT INTO `tiko`.`opiskelijat` (`nro`, `nimi`, `p_aine`) VALUES ('3', 'Kalle', 'VT');
-INSERT INTO `tiko`.`opiskelijat` (`nro`, `nimi`, `p_aine`) VALUES ('4', 'Liisa', 'VT');
+INSERT INTO suoritukset VALUES (1, 1, 5);
 
-INSERT INTO `tiko`.`kurssit` (`id`, `nimi`, `opettaja`) VALUES ('1', 'tkp', 'KI');
-INSERT INTO `tiko`.`kurssit` (`id`, `nimi`, `opettaja`) VALUES ('2', 'oope', 'JL');
-INSERT INTO `tiko`.`kurssit` (`id`, `nimi`, `opettaja`) VALUES ('3', 'tiko', 'MJ');
+INSERT INTO suoritukset VALUES (1, 2, 4);
 
-INSERT INTO `tiko`.`suoritukset` (`k_id`, `op_nro`, `arvosana`) VALUES ('1', '1', '5');
-INSERT INTO `tiko`.`suoritukset` (`k_id`, `op_nro`, `arvosana`) VALUES ('1', '2', '4');
-INSERT INTO `tiko`.`suoritukset` (`k_id`, `op_nro`, `arvosana`) VALUES ('1', '3', '2');
-INSERT INTO `tiko`.`suoritukset` (`k_id`, `op_nro`, `arvosana`) VALUES ('2', '1', '5');
-INSERT INTO `tiko`.`suoritukset` (`k_id`, `op_nro`, `arvosana`) VALUES ('2', '2', '3');
-INSERT INTO `tiko`.`suoritukset` (`k_id`, `op_nro`, `arvosana`) VALUES ('2', '4', '3');
-INSERT INTO `tiko`.`suoritukset` (`k_id`, `op_nro`, `arvosana`) VALUES ('3', '1', '5');
-INSERT INTO `tiko`.`suoritukset` (`k_id`, `op_nro`, `arvosana`) VALUES ('3', '2', '4');
+INSERT INTO suoritukset VALUES (1, 3, 2);
+
+INSERT INTO suoritukset VALUES (2, 1, 5);
+
+INSERT INTO suoritukset VALUES (2, 2, 3);
+
+INSERT INTO suoritukset VALUES (2, 4, 3);
+
+INSERT INTO suoritukset VALUES (3, 1, 5);
+
+INSERT INTO suoritukset VALUES (3, 2, 4);
