@@ -53,3 +53,4 @@ $router->post('/answers/save', 'AnswerController@save');
 $router->get('/answers/delete', 'AnswerController@delete');
 
 $router->get('/students', 'StudentManagementController@index');
+$router->post('/students/show', 'StudentManagementController@show');

@@ -54,7 +54,8 @@ class SessionManagementController
         foreach ($userIds as $userId) {
             Session::create([
                 'ID_KAYTTAJA' => $userId,
-                'ID_TLISTA' => $req->get('tehtavalista')
+                'ID_TLISTA' => $req->get('tehtavalista'),
+                'ID_LUOJA' => auth()->ID_KAYTTAJA
             ]);
         }
 

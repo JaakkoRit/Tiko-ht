@@ -14,18 +14,22 @@ class ReportController
         if(Gate::hasRole('opiskelija'))
             header('Location:/student-home');
     }
+
     public function showSessionRaport(){
         $taskListCreator = $_SESSION['id_kayttaja'];
         $tasklistArray = TaskList::findAllWhere("ID_KAYTTAJA", $_SESSION['id_kayttaja']);
         $sessionArray = Session::all();
         $studentArray = Student::all();
         $attemptArray = Attempt::all();
+
         return view('session-report', compact('sessionArray', 'attemptArray', 'studentArray', 'tasklistArray', 'taskListCreator'));
     }
+
     public function showTaskListSessionReport(){
         $taskListCreator = $_SESSION['id_kayttaja'];
         $tasklistArray = TaskList::findAllWhere("ID_KAYTTAJA", $_SESSION['id_kayttaja']);
         $sessionArray = Session::all();
+
         return view('tasklistsession-report', compact('tasklistArray', 'sessionArray', 'taskListCreator'));
     }
 }

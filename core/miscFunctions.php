@@ -5,6 +5,7 @@ use App\App\Models\TaskCompletion;
 use App\App\Models\Attempt;
 use App\App\Models\Query;
 use App\Core\App;
+use App\App\Models\Gate;
 
 function anyTasksLeft($taskIndex, $tasks, $session)
 {
@@ -149,4 +150,19 @@ function getReferer() {
     return \App\Core\App::get('request')
         ->headers
         ->get('referer');
+}
+
+function urlMatches($pattern) {
+    return preg_grep($pattern, [$_SERVER['REQUEST_URI']]);
+}
+
+function getHomePage() {
+    if (Gate::hasRole('opiskelija')) {
+        return '/student-home';
+    } else if (Gate::hasRole('opettaja')) {
+        return '/teacher-home';
+    } else if (Gate::hasRole('admin')) {
+        return '/admin-home';
+    }
+    return '/';
 }

@@ -83,6 +83,7 @@ create table SESSIO (
 	ID_SESSIO int AUTO_INCREMENT,
 	ID_KAYTTAJA int not null,
 	ID_TLISTA int not null,
+	ID_LUOJA int not null,
 	ALKAIKA time,
 	LOPAIKA time,
 	primary key (ID_SESSIO),
@@ -90,6 +91,8 @@ create table SESSIO (
 	KAYTTAJA,
 	foreign key (ID_TLISTA) references
 	TEHTAVALISTA
+	foreign key (ID_LUOJA) references
+	KAYTTAJA
 );
 
 create table YRITYS (

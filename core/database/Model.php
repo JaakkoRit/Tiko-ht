@@ -263,4 +263,25 @@ abstract class Model
             ->bind(':vastaus', $answer)
             ->execute();
     }
+
+    public static function findStudentsWhoHaveDoneUsersSession($id)
+    {
+        return App::get('database')
+            ->query("SELECT DISTINCT O.ID_KAYTTAJA, O.ONRO, O.NIMI, O.PAAAINE, O.SALASANA"
+                . " FROM OPISKELIJA O, SESSIO S"
+                . " WHERE O.ID_KAYTTAJA = S.ID_KAYTTAJA"
+                . " AND S.ID_LUOJA = :id")
+            ->bind(':id', $id)
+            ->getAll(get_called_class());
+    }
+
+    public static function findAllCompletedSessions($field, $value)
+    {
+        return App::get('database')
+            ->query("SELECT * FROM SESSIO"
+                . " WHERE " . $field . " = :id"
+                . " AND LOPAIKA IS NOT NULL")
+            ->bind(':id', $value)
+            ->getAll(get_called_class());
+    }
 }

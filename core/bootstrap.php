@@ -20,5 +20,10 @@ App::bind('request', Request::createFromGlobals());
 $request = App::get('request');
 $routes = "/../app/routes.php";
 
-Router::define($routes)
-    ->fire($request->getPathInfo(), $request->getMethod());
+try {
+    Router::define($routes)
+        ->fire($request->getPathInfo(), $request->getMethod());
+} catch (Exception $e) {
+    $_SESSION['errors'] = [$e->getMessage()];
+    header('Location: ' . getHomePage());
+}
