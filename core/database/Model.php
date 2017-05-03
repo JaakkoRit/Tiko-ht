@@ -138,6 +138,16 @@ abstract class Model
 			->execute();
 	}
 
+    public static function deleteWhere($field, $id)
+    {
+        App::get('database')
+            ->query('DELETE FROM '
+                . static::getTableName()
+                . ' WHERE ' . $field . ' = :id')
+            ->bind(':id', $id)
+            ->execute();
+    }
+
     public static function deleteTaskInTaskList($tlista, $tehtava)
     {
         App::get('database')
@@ -204,4 +214,53 @@ abstract class Model
             ->bind(':tehtava', $tehtava)
             ->getOne(get_called_class());
 	}
+
+    public static function updateWhere($field, $id, $data)
+    {
+        $sql = 'UPDATE ' . static::getTableName() . ' SET ';
+        foreach($data as $key => $value) {
+            $sql .= $key . ' = :' . $key . ', ';
+        }
+        $sql = substr($sql, 0, -2);
+        $sql .= " WHERE $field = :id";
+        $statement = App::get('database')
+            ->query($sql);
+        $statement->bind(':id', $id);
+        foreach($data as $key => $value) {
+            $statement->bind(':'.$key, $value);
+        }
+
+        $statement->execute();
+    }
+
+    public static function updateWhereAnd($field, $id, $field2, $id2, $data)
+    {
+        $sql = 'UPDATE ' . static::getTableName() . ' SET ';
+        foreach($data as $key => $value) {
+            $sql .= $key . ' = :' . $key . ', ';
+        }
+        $sql = substr($sql, 0, -2);
+        $sql .= " WHERE $field = :id";
+        $sql .= " AND $field2 = :id2";
+        $statement = App::get('database')
+            ->query($sql);
+        $statement->bind(':id', $id);
+        $statement->bind(':id2', $id2);
+        foreach($data as $key => $value) {
+            $statement->bind(':'.$key, $value);
+        }
+        $statement->execute();
+    }
+
+    public static function deleteAnswer($id, $answer)
+    {
+        App::get('database')
+            ->query('DELETE FROM '
+                . static::getTableName()
+                . ' WHERE ID_TEHTAVA = :id'
+                . ' AND VASTAUS = :vastaus')
+            ->bind(':id', $id)
+            ->bind(':vastaus', $answer)
+            ->execute();
+    }
 }

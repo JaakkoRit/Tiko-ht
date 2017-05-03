@@ -22,7 +22,7 @@
 
     <hr>
 
-    <a href="/tasks/create" class="button">Lisää tehtävä</a>
+    <a href="/tasks/create?id=<?= $id; ?>" class="button">Lisää tehtävä</a>
 
 <?php require 'message.view.php'; ?>
 

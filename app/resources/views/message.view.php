@@ -3,7 +3,7 @@
     <hr>
 
     <div class="notification is-primary">
-        <?php echo $message; ?>
+        <?= $message; ?>
     </div>
 
 <?php endif; ?>

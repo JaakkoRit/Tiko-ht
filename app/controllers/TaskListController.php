@@ -21,8 +21,9 @@ class TaskListController
     public function index()
     {
         $taskLists = TaskList::all();
+        $message = getMessage();
 
-        return view('tasklists', compact('taskLists'));
+        return view('tasklists', compact('taskLists', 'message'));
     }
 
     public function create()
@@ -89,12 +90,48 @@ class TaskListController
             header('Location: /');
         }
 
-
         $tasks = Task::findAllTasksFromTaskList($id);
 
         return view('edit-tasklist', compact(
             'tasks',
             'id'));
+    }
+
+    public function update()
+    {
+        $req = App::get('request');
+
+        $errors = (new Validator([
+            'tehtavat' => 'required'
+        ]))->validate();
+
+        if (count($errors) > 0) {
+            $_SESSION['errors'] = $errors;
+            header('Location: ' . getReferer());
+        } else {
+            $taskIds = getIds($req->get('tehtavat'));
+
+            foreach ($taskIds as $taskId) {
+                TaskInTaskList::create([
+                    'ID_TLISTA' => $req->get('id'),
+                    'ID_TEHTAVA' => $taskId
+                ]);
+            }
+
+            header('Location: /tasklists');
+        }
+    }
+
+    public function delete()
+    {
+        $req = App::get('request');
+
+        TaskList::delete($req->get('id'));
+        TaskInTaskList::deleteWhere('ID_TLISTA', $req->get('id'));
+
+        $_SESSION['message'] = 'Tehtävälista poistettu!';
+
+        header('Location: /tasklists');
     }
 
     public function deleteTask()

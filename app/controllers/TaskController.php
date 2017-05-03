@@ -5,6 +5,7 @@ namespace App\App\Controllers;
 use App\App\Models\Answer;
 use App\App\Models\Gate;
 use App\App\Models\Task;
+use App\App\Models\TaskInTaskList;
 use App\Core\App;
 use App\Core\Validator;
 
@@ -21,14 +22,25 @@ class TaskController
     {
         $tasks = Task::all();
 
-        return view('tasks', compact('tasks'));
+        $message = getMessage();
+
+        return view('tasks', compact('tasks', 'message'));
     }
 
     public function create()
     {
+        $req = App::get('request');
+
+        $tasks = [];
+        $id = $req->get('id');
+
+        if (isset($id)) {
+            $tasks = Task::all();
+        }
+
         $errors = getErrors();
 
-        return view('tasks-create', compact('errors'));
+        return view('tasks-create', compact('errors', 'id', 'tasks'));
     }
 
     public function save()
@@ -59,6 +71,15 @@ class TaskController
                 'VASTAUS' => $req->get('vastaus')
             ]);
 
+            $id = $req->get('id');
+
+            if (isset($id)) {
+                TaskInTaskList::create([
+                    'ID_TEHTAVA' => $taskId,
+                    'ID_TLISTA' => $id
+                ]);
+            }
+
             header('Location: /tasks');
         }
     }
@@ -70,29 +91,60 @@ class TaskController
         $task = Task::find($req->get('id'));
         $answers = Answer::findAllWhere('ID_TEHTAVA', $task->ID_TEHTAVA);
 
-        return view('edit-task', compact('task', 'answers'));
+        $errors = getErrors();
+        $message = getMessage();
+
+        return view('edit-task', compact('task', 'answers', 'errors', 'message'));
     }
 
     public function update()
     {
         $req = App::get('request');
 
-        $errors = (new Validator([
+        $errors = [];
+        $inputs = $req->request->all();
 
-        ]))->validate();
+        $previousPage = $req->headers->get('referer');
 
-        $index = 0;
-        $array = [];
-        $continue = true;
-
-        while ($continue) {
-            $array[] = $req->get("vastaus$index");
-            $index += 1;
-            if ($req->get("vastaus$index") == null) {
-                $continue = false;
-            }
+        foreach ($inputs as $key => $value) {
+            $errors = array_merge($errors, (new Validator([
+                $key => 'required'
+            ]))->validate());
         }
 
-        dd($array);
+        if (count($errors) > 0) {
+            $_SESSION['errors'] = $errors;
+            header("Location: $previousPage");
+        } else {
+            $newAnswers = preg_grep_keys('/^(vastaus)/', $inputs);
+            $ogAnswers = preg_grep_keys('/^(alkuperainen)/', $inputs);
+
+            $index = 0;
+
+            foreach ($newAnswers as $new) {
+                Answer::updateWhere(
+                    'VASTAUS', $ogAnswers["alkuperainen$index"],
+                    ['VASTAUS' => $new]
+                );
+                $index += 1;
+            }
+
+            Task::update($req->get('id'), ['KUVAUS' => $req->get('kuvaus')]);
+
+            $_SESSION['message'] = 'Päivitys onnistui!';
+
+            header("Location: $previousPage");
+        }
+    }
+
+    public function delete()
+    {
+        $req = App::get('request');
+
+        Task::delete($req->get('id'));
+
+        $_SESSION['message'] = 'Tehtävä poistettu!';
+
+        header('Location: /tasks');
     }
 }

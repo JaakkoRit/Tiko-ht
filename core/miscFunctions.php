@@ -129,3 +129,24 @@ function getErrors() {
 
     return $errors;
 }
+
+function getMessage() {
+    $message = null;
+
+    if (isset($_SESSION['message'])) {
+        $message = $_SESSION['message'];
+        unset($_SESSION['message']);
+    }
+
+    return $message;
+}
+
+function preg_grep_keys($pattern, $input, $flags = 0) {
+    return array_intersect_key($input, array_flip(preg_grep($pattern, array_keys($input), $flags)));
+}
+
+function getReferer() {
+    return \App\Core\App::get('request')
+        ->headers
+        ->get('referer');
+}

@@ -13,7 +13,17 @@
     <hr>
 
     <?php if (auth()->ID_KAYTTAJA == $taskListCreator || \App\App\Models\Gate::hasRole('admin')) : ?>
-        <a href="/edit-tasklist?id=<?= $id; ?>" class="button">Muokkaa listaa</a>
+        <div class="field is-grouped">
+            <p class="control">
+                <a href="/edit-tasklist?id=<?= $id; ?>" class="button">Muokkaa listaa</a>
+            </p>
+            <p class="control">
+                <form action="/tasklists/delete" method="post">
+                    <input type="hidden" name="id" value="<?= $id ?>">
+                    <button type="submit" class="button is-danger">Poista lista</button>
+                </form>
+            </p>
+        </div>
     <?php endif; ?>
 
 <?php require 'message.view.php'; ?>
