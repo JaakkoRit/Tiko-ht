@@ -1,43 +1,73 @@
 <?php require "_header.view.php"; ?>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-3">
+                    <button type="button" class="navbar-toggle pull-left" data-toggle="collapse" data-target="#sidebar">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">SQL-opetus</a>
+                </div>
+                <div class="col-md-1 pull-right">
 
-    <section>
-        <div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="content">
+        <nav class="navbar navbar-inverse sidebar-left collapse navbar-collapse no-transition" id="sidebar">
+            <?php if (isset($_SESSION['nimi'])) : ?>
+                <p class="navbar-text"><?php echo $_SESSION['nimi']; ?></p>
+            <?php endif; ?>
+            <a class="navbar-link"href="/logout">Kirjaudu ulos</a>
+            <hr>
+            <ul class="nav navbar-nav">
+                <li><a href="/session-report" class="button">Sessioraportit</a> </li>
+                <li><a href="/tasklistsession-report" class="button">Tehtävälistan <br> suoritusaikaraportit</a> </li>
+            </ul>
+        </nav>
+        <div class="container">
             <?php foreach ($tasklistArray as $tasklist):?>
-                <h1>Sessiot tehtävälistasta <?php Echo $tasklist->ID_TLISTA;?></h1>
-                <table>
-                    <tr>
-                        <th>Sessio</th>
-                        <th>Opiskelija</th>
-                        <th>Onnistuneiden lkm</th>
-                        <th>Suoritettu</th>
-                    </tr>
-                    <?php foreach($sessionArray as $session):?>
-                        <tr>
-                            <?php if($session->ID_TLISTA == $tasklist->ID_TLISTA):?>
-                                <td><?php Echo $session->ID_SESSIO;?></td>
-                                <td><?php foreach ($studentArray as $student){
-                                    if($student->ID_KAYTTAJA == $session->ID_KAYTTAJA)
-                                        Echo $student->NIMI;
-                                    }
-                                    ?></td>
-                                <td><?php $rightcount = 0;foreach ($attemptArray as $attempt){
+                <h3>Sessiot tehtävälistasta <?php Echo $tasklist->ID_TLISTA;?></h3>
+                <div class="row">
+                    <div class="col-sm-5">
+                        <table>
+                            <tr>
+                                <th>Sessio</th>
+                                <th>Opiskelija</th>
+                                <th>Onnistuneiden lkm</th>
+                                <th>Suoritettu</th>
+                            </tr>
+                            <?php foreach($sessionArray as $session):?>
+                                <tr>
+                                    <?php if($session->ID_TLISTA == $tasklist->ID_TLISTA):?>
+                                        <td><?php Echo $session->ID_SESSIO;?></td>
+                                        <td><?php foreach ($studentArray as $student){
+                                            if($student->ID_KAYTTAJA == $session->ID_KAYTTAJA)
+                                                Echo $student->NIMI;
+                                            }
+                                            ?></td>
+                                        <td><?php $rightcount = 0;foreach ($attemptArray as $attempt){
 
-                                        if($attempt->OLIKOOIKEIN == '1' && $attempt->ID_SESSIO == $session->ID_SESSIO)
-                                            $rightcount++;
-                                    }
-                                    Echo $rightcount; ?></td>
-                                <td><?php if($session->LOPAIKA == null)
-                                    echo "Ei";
-                                else echo "Kyllä";?></td>
-                            <?php endif;?>
-                        </tr>
-                    <?php endforeach;?>
-                </table>
+                                                if($attempt->OLIKOOIKEIN == '1' && $attempt->ID_SESSIO == $session->ID_SESSIO)
+                                                    $rightcount++;
+                                            }
+                                            Echo $rightcount; ?></td>
+                                        <td><?php if($session->LOPAIKA == null)
+                                            echo "Ei";
+                                        else echo "Kyllä";?></td>
+                                    <?php endif;?>
+                                </tr>
+                            <?php endforeach;?>
+                        </table>
+                    </div>
+                </div>
                 <br>
             <?php endforeach;?>
         </div>
-    </section>
-
+    </div>
 <?php require 'message.view.php'; ?>
 
 <?php require "_footer.view.php"; ?>

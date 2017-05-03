@@ -1,28 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>TiKO HT</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.4.0/css/bulma.css"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SQL-opetus</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="css/custom.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="res/favicon-32x32.png" sizes="32x32" >
+    <link rel="icon" type="image/png" href="res/favicon-16x16.png" sizes="16x16" >
 </head>
 <body>
-
-<section class="hero is-medium is-primary is-bold">
-    <div class="hero-body">
-        <div class="container">
-            <h1 class="title">Tietokantaohjelmointi</h1>
-            <h2 class="subtitle">Harjoitustyö</h2>
-            <?php if (isset($_SESSION['nimi'])) : ?>
-                <h3 class="subtitle"><?php echo $_SESSION['nimi']; ?></h3>
-            <?php endif; ?>
-        </div>
-    </div>
-</section>
-<div class="tabs is-centered">
-    <ul>
-        <li><a href="/">Etusivu</a></li>
-    </ul>
-</div>
-
-<section class="section">
-    <div class="container">

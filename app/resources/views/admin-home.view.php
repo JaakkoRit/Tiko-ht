@@ -25,9 +25,6 @@
             <a class="navbar-link"href="/logout">Kirjaudu ulos</a>
             <hr>
             <ul class="nav navbar-nav">
-                <?php foreach ($sessions as $session) : ?>
-                    <li><a href="/session?sessionid=<?= $session->ID_SESSIO; ?>&taskIndex=0" class="button">Sessio</a> </li>
-                <?php endforeach; ?>
             </ul>
         </nav>
     </div>

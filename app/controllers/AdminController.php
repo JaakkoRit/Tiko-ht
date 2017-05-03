@@ -8,9 +8,13 @@ use App\App\Models\Admin;
 
 class AdminController
 {
+    public function index()
+    {
+        return view('admin-home', compact('sessions'));
+    }
     public function create()
     {
-        return view('admin-login');
+        return view('login');
     }
 
     public function save()
@@ -24,9 +28,9 @@ class AdminController
             $_SESSION['nimi'] = $admin->NIMI;
             $_SESSION['rooli'] = $user->ROOLI;
 
-            header('Location: /');
+            header('Location: /admin-home');
         }
 
-        return view('admin-login', ['message' => 'Nimi tai salasana väärin.']);
+        return view('login', ['message' => 'Nimi tai salasana väärin.']);
     }
 }

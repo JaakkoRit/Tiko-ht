@@ -18,7 +18,7 @@ class StudentController
 
     public function create()
     {
-        return view('student-login');
+        return view('login');
     }
 
     public function save()
@@ -33,10 +33,10 @@ class StudentController
             $_SESSION['onro'] = $student->ONRO;
             $_SESSION['rooli'] = $user->ROOLI;
 
-            header('Location: /');
+            header('Location: /student-home');
         }
 
-        return view('student-login', ['message' => 'Opiskelijanumero tai salasana väärin.']);
+        return view('login', ['message' => 'Opiskelijanumero tai salasana väärin.']);
     }
 
     public function destroy()

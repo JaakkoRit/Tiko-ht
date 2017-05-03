@@ -7,9 +7,11 @@ $router->get('/student-login', 'StudentController@create');
 $router->post('/student-login', 'StudentController@save');
 $router->get('/logout', 'StudentController@destroy');
 
+$router->get('/teacher-home', 'TeacherController@index');
 $router->get('/teacher-login', 'TeacherController@create');
 $router->post('/teacher-login', 'TeacherController@save');
 
+$router->get('/admin-home', 'AdminController@index');
 $router->get('/admin-login', 'AdminController@create');
 $router->post('/admin-login', 'AdminController@save');
 

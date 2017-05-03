@@ -25,9 +25,8 @@
             <a class="navbar-link"href="/logout">Kirjaudu ulos</a>
             <hr>
             <ul class="nav navbar-nav">
-                <?php foreach ($sessions as $session) : ?>
-                    <li><a href="/session?sessionid=<?= $session->ID_SESSIO; ?>&taskIndex=0" class="button">Sessio</a> </li>
-                <?php endforeach; ?>
+                <li><a href="/session-report" class="button">Sessioraportit</a> </li>
+                <li><a href="/tasklistsession-report" class="button">Tehtävälistan <br> suoritusaikaraportit</a> </li>
             </ul>
         </nav>
     </div>
