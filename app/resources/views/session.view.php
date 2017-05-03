@@ -4,9 +4,6 @@
 
 <?php require "_sidebar.view.php"; ?>
 
-                <li><a href="/student-home" class="button">Takaisin<br>etusivulle</a> </li>
-            </ul>
-        </nav>
         <div class="container">
             <h1><?= $task->KUVAUS; ?></h1>
             <hr>
