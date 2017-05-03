@@ -8,47 +8,25 @@
 
         <input type="hidden" value="<?= $task->ID_TEHTAVA; ?>" name="id">
 
-        <div class="field">
-            <label class="label">Tehtävän kuvaus</label>
-            <p class="control">
-                <input class="input" name="kuvaus" type="text" value="<?= $task->KUVAUS; ?>">
-            </p>
-        </div>
+        <label class="label">Tehtävän kuvaus</label>
+        <input class="input" name="kuvaus" type="text" value="<?= $task->KUVAUS; ?>">
 
-        <div class="field">
-            <label class="label">Vastaukset</label>
-        </div>
+        <label class="label">Vastaukset</label>
 
-        <?php $index = 0;
-        foreach ($answers as $answer) : ?>
-            <div class="field">
-                <p class="control">
-                    <input type="hidden" name="alkuperainen<?= $index; ?>" value="<?= $answer->VASTAUS; ?>">
-                    <input class="input" name="vastaus<?= $index; ?>" type="text" value="<?= $answer->VASTAUS; ?>">
-                </p>
-                <p class="control">
-                    <a href="/answers/delete?index=<?= $index; ?>&id=<?= $task->ID_TEHTAVA; ?>" class="button is-danger is-right">Poista</a>
-                </p>
-                <?php $index += 1; ?>
-            </div>
+        <?php $index = 0; foreach ($answers as $answer) : ?>
+            <input type="hidden" name="alkuperainen<?= $index; ?>" value="<?= $answer->VASTAUS; ?>">
+            <input class="input" name="vastaus<?= $index; ?>" type="text" value="<?= $answer->VASTAUS; ?>">
+            <a href="/answers/delete?index=<?= $index; ?>&id=<?= $task->ID_TEHTAVA; ?>"
+               class="button is-danger is-right">Poista</a>
+            <?php $index += 1; ?>
         <?php endforeach; ?>
 
-        <div class="field is-grouped">
-            <p class="control">
-                <a href="/answers/create?id=<?= $task->ID_TEHTAVA; ?>" class="button is-primary">Lisää vastaus</a>
-            </p>
-        </div>
+        <a href="/answers/create?id=<?= $task->ID_TEHTAVA; ?>" class="button is-primary">Lisää vastaus</a>
 
         <hr>
 
-        <div class="field is-grouped">
-            <p class="control">
-                <button type="submit" class="button is-primary">Tallenna</button>
-            </p>
-            <p class="control">
-                <a href="<?= getReferer(); ?>" class="button">Takaisin</a>
-            </p>
-        </div>
+        <button type="submit" class="button is-primary">Tallenna</button>
+        <a href="<?= getReferer(); ?>" class="button">Takaisin</a>
 
     </form>
 

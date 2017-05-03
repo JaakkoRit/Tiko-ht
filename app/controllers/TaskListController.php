@@ -29,7 +29,6 @@ class TaskListController
     public function create()
     {
         $tasks = Task::all();
-
         $errors = getErrors();
 
         return view('tasklists-create', compact('tasks', 'errors'));
@@ -38,6 +37,7 @@ class TaskListController
     public function save()
     {
         $req = App::get('request');
+        $db = App::get('database');
 
         $errors = (new Validator([
             'kuvaus' => 'required',
@@ -51,18 +51,30 @@ class TaskListController
 
         $taskIds = getIds($req->get('tehtavat'));
 
-        $taskListId = TaskList::create([
-            'ID_KAYTTAJA' => auth()->ID_KAYTTAJA,
-            'KUVAUS' => $req->get('kuvaus'),
-            'LUOMPVM' => date('y-m-d')
-        ]);
-
-        foreach ($taskIds as $taskId) {
-            TaskInTaskList::create([
-                'ID_TLISTA' => $taskListId,
-                'ID_TEHTAVA' => $taskId
+        $db->beginTransaction();
+        try {
+            $taskListId = TaskList::create([
+                'ID_KAYTTAJA' => auth()->ID_KAYTTAJA,
+                'KUVAUS' => $req->get('kuvaus'),
+                'LUOMPVM' => date('y-m-d')
             ]);
+
+            foreach ($taskIds as $taskId) {
+                TaskInTaskList::create([
+                    'ID_TLISTA' => $taskListId,
+                    'ID_TEHTAVA' => $taskId
+                ]);
+            }
         }
+        catch (\Exception $e)
+        {
+            $db->rollback();
+            $errors[] = $e->getMessage();
+            $_SESSION['errors'] = $errors;
+            header('Location: /tasklists/create');
+            die();
+        }
+        $db->commit();
 
         header('Location: /tasklists');
     }

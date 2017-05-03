@@ -51,3 +51,5 @@ $router->post('/sessions-management/save', 'SessionManagementController@save');
 $router->get('/answers/create', 'AnswerController@create');
 $router->post('/answers/save', 'AnswerController@save');
 $router->get('/answers/delete', 'AnswerController@delete');
+
+$router->get('/students', 'StudentManagementController@index');

@@ -46,6 +46,7 @@ class TaskController
     public function save()
     {
         $req = App::get('request');
+        $db = App::get('database');
 
         $errors = (new Validator([
             'kuvaus' => 'required',
@@ -57,29 +58,40 @@ class TaskController
             header('Location: /tasks/create');
         }
         else {
-            $queryType = getQueryType($req->get('vastaus'));
+            $db->beginTransaction();
+            try {
+                $queryType = getQueryType($req->get('vastaus'));
 
-            $taskId = Task::create([
-                'ID_KAYTTAJA' => auth()->ID_KAYTTAJA,
-                'LUOMPVM' => date('y-m-d'),
-                'KYSELYTYYPPI' => $queryType,
-                'KUVAUS' => $req->get('kuvaus')
-            ]);
-
-            Answer::create([
-                'ID_TEHTAVA' => $taskId,
-                'VASTAUS' => $req->get('vastaus')
-            ]);
-
-            $id = $req->get('id');
-
-            if (isset($id)) {
-                TaskInTaskList::create([
-                    'ID_TEHTAVA' => $taskId,
-                    'ID_TLISTA' => $id
+                $taskId = Task::create([
+                    'ID_KAYTTAJA' => auth()->ID_KAYTTAJA,
+                    'LUOMPVM' => date('y-m-d'),
+                    'KYSELYTYYPPI' => $queryType,
+                    'KUVAUS' => $req->get('kuvaus')
                 ]);
-            }
 
+                Answer::create([
+                    'ID_TEHTAVA' => $taskId,
+                    'VASTAUS' => $req->get('vastaus')
+                ]);
+
+                $id = $req->get('id');
+
+                if (isset($id)) {
+                    TaskInTaskList::create([
+                        'ID_TEHTAVA' => $taskId,
+                        'ID_TLISTA' => $id
+                    ]);
+                }
+            }
+            catch (\Exception $e)
+            {
+                $db->rollback();
+                $errors[] = $e->getMessage();
+                $_SESSION['errors'] = $errors;
+                header('Location: /tasks/create');
+                die();
+            }
+            $db->commit();
             header('Location: /tasks');
         }
     }
