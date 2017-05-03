@@ -18,6 +18,7 @@ class TeacherController
     public function index()
     {
         $tasklists = TaskList::findAllWhere("ID_KAYTTAJA", $_SESSION['id_kayttaja']);
+
         return view('teacher-home', compact('tasklists'));
     }
     public function create()

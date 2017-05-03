@@ -25,7 +25,7 @@
 						<form action="/student-login" method="POST" class="form-signin" id="studentForm" style="display: none;">
 							<h2 class="form-signin-heading">Opiskelijan kirjautuminen</h2>
 							<label for="inputStudentNumber" class="sr-only">Opiskelijanumero</label>
-							<input name="onro" type="number" id="inputStudentNumber" class="form-control" placeholder="Opiskelijanumero" required autofocus>
+							<input name="onro" type="text" id="inputStudentNumber" class="form-control" placeholder="Opiskelijanumero" required autofocus>
 							<label for="inputStudentPassword" class="sr-only">Salasana</label>
 							<input name="salasana" type="password" id="inputStudentPassword" class="form-control" placeholder="Salasana" required>
 							<button class="btn btn-lg btn-primary btn-block" type="submit">Kirjaudu sisään</button>
@@ -33,7 +33,7 @@
 						<form action="/teacher-login" method="POST" class="form-signin" id="teacherForm" style="display: none;">
 							<h2 class="form-signin-heading">Opettajan kirjautuminen</h2>
 							<label for="inputTeacherNumber" class="sr-only">Opettajanumero</label>
-                            <input name="onro" type="number" id="inputTeacherNumber" class="form-control" placeholder="Opettajanumero" required autofocus>
+                            <input name="onro" type="text" id="inputTeacherNumber" class="form-control" placeholder="Opettajanumero" required autofocus>
 							<label for="inputTeacherPassword" class="sr-only">Salasana</label>
                             <input name="salasana" type="password" id="inputTeacherPassword" class="form-control" placeholder="Salasana" required>
 							<button class="btn btn-lg btn-primary btn-block" type="submit">Kirjaudu sisään</button>
