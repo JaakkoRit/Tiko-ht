@@ -12,9 +12,14 @@ use App\Core\App;
 use App\App\Models\Teacher;
 use App\App\Models\User;
 use App\App\Models\TaskList;
+use App\App\Models\Gate;
 
 class TeacherController
 {
+    public function __construct(){
+        if(Gate::hasRole('opiskelija'))
+            header('Location:/student-home');
+    }
     public function index()
     {
         $tasklists = TaskList::findAllWhere("ID_KAYTTAJA", $_SESSION['id_kayttaja']);

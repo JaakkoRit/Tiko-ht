@@ -6,9 +6,14 @@ use App\App\Models\User;
 use App\Core\App;
 use App\App\Models\Student;
 use App\App\Models\Session;
+use App\App\Models\Gate;
 
 class StudentController
 {
+    public function __construct(){
+        if(Gate::hasRole('opettaja'))
+            header('Location:/teacher-home');
+    }
     public function index()
     {
         $sessions = Session::findAllWhere('ID_KAYTTAJA', auth()->ID_KAYTTAJA);

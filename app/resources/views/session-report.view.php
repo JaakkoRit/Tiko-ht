@@ -4,11 +4,16 @@
 
 <?php require "_sidebar.view.php"; ?>
 
-                <li><a href="/session-report" class="button">Sessioraportit</a> </li>
-                <li><a href="/tasklistsession-report" class="button">Tehtävälistan<br>suoritusaikaraportit</a> </li>
-                <li><a href="/teacher-home" class="button">Takaisin<br>etusivulle</a> </li>
+
+
+                <?php if (auth()->ID_KAYTTAJA == $taskListCreator || \App\App\Models\Gate::hasRole('admin')):?>
+                    <li><a href="/session-report" class="button">Sessioraportit</a> </li>
+                    <li><a href="/tasklistsession-report" class="button">Tehtävälistan<br>suoritusaikaraportit</a> </li>
+                    <li><a href="/teacher-home" class="button">Takaisin<br>etusivulle</a> </li>
+                <?php endif;?>
             </ul>
         </nav>
+
         <div class="container">
             <?php foreach ($tasklistArray as $tasklist):?>
                 <h3>Sessiot tehtävälistasta <?php Echo $tasklist->ID_TLISTA;?></h3>
