@@ -26,6 +26,7 @@
             <ul class="nav navbar-nav">
                 <li><a href="/session-report" class="button">Sessioraportit</a> </li>
                 <li><a href="/tasklistsession-report" class="button">Tehtävälistan <br> suoritusaikaraportit</a> </li>
+                <li><a href="/teacher-home" class="button">Takaisin<br>etusivulle</a> </li>
             </ul>
         </nav>
         <div class="container">

@@ -24,6 +24,7 @@
             <a class="navbar-link"href="/logout">Kirjaudu ulos</a>
             <hr>
             <ul class="nav navbar-nav">
+                <li><a href="/teacher-home" class="button">Takaisin<br>etusivulle</a> </li>
             </ul>
         </nav>
         <div class="container">
