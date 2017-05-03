@@ -27,3 +27,20 @@ $router->post('/session', 'SessionController@save');
 
 $router->get('/session-report', 'ReportController@showSessionRaport');
 $router->get('/tasklistsession-report', 'ReportController@showTaskListSessionReport');
+
+$router->get('/tasks', 'TaskController@index');
+$router->get('/tasks/create', 'TaskController@create');
+$router->post('/tasks/save', 'TaskController@save');
+$router->get('/tasks/edit', 'TaskController@edit');
+$router->post('/tasks/update', 'TaskController@update');
+
+$router->get('/tasklists', 'TaskListController@index');
+$router->get('/tasklists/create', 'TaskListController@create');
+$router->post('/tasklists/save', 'TaskListController@save');
+$router->get('/show-tasklist', 'TaskListController@show');
+$router->get('/edit-tasklist', 'TaskListController@edit');
+$router->post('/delete-taskfromtasklist', 'TaskListController@deleteTask');
+
+$router->get('/sessions-management', 'SessionManagementController@index');
+$router->get('/sessions-management/create', 'SessionManagementController@create');
+$router->post('/sessions-management/save', 'SessionManagementController@save');

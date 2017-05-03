@@ -88,21 +88,44 @@ function updateTaskCompletion($req) {
         date("Y-m-d H:i:s")
     );
 }
-function arrayToHtml($tableName){
+
+function arrayToHtml($tableName)
+{
     $table = Query::rawQuery(Session::selectFrom($tableName, '*'));
     $columnNames = Query::rawQuery(Session::selectColumnNames($tableName));
     $tableHtml = "<table style=\"width:100%\"><caption>$tableName</caption><tr>";
-    foreach($columnNames as $row) {
+    foreach ($columnNames as $row) {
         foreach ($row as $index)
             $tableHtml .= "<th>" . $index . "</th>";
     }
     $tableHtml .= "</tr>";
-    foreach($table as $row){
+    foreach ($table as $row) {
         $tableHtml .= "<tr>";
-        foreach($row as $index)
-            $tableHtml .= "<td>".$index."</td>";
+        foreach ($row as $index)
+            $tableHtml .= "<td>" . $index . "</td>";
         $tableHtml .= "</tr>";
     }
     $tableHtml .= "</table><br>";
     return $tableHtml;
+}
+
+function getQueryType($answer) {
+    $query = explode(' ', $answer);
+
+    return strtoupper($query[0]);
+}
+
+function getIds($ids) {
+    return explode(' ', $ids);
+}
+
+function getErrors() {
+    $errors = [];
+
+    if (isset($_SESSION['errors'])) {
+        $errors = $_SESSION['errors'];
+        unset($_SESSION['errors']);
+    }
+
+    return $errors;
 }

@@ -138,6 +138,18 @@ abstract class Model
 			->execute();
 	}
 
+    public static function deleteTaskInTaskList($tlista, $tehtava)
+    {
+        App::get('database')
+            ->query('DELETE FROM '
+                . static::getTableName()
+                . ' WHERE ID_TLISTA = :tlista'
+                . ' AND ID_TEHTAVA = :tehtava')
+            ->bind(':tlista', $tlista)
+            ->bind(':tehtava', $tehtava)
+            ->execute();
+    }
+
 	public static function update($id, $data)
 	{
 		$sql = 'UPDATE ' . static::getTableName() . ' SET ';
@@ -179,5 +191,17 @@ abstract class Model
 				. ' WHERE ' . static::$primaryKey . ' = :id')
 			->bind(':id', $this->id)
 			->execute();
+	}
+
+    public static function findTaskInTaskList($tlista, $tehtava)
+    {
+        return App::get('database')
+            ->query("SELECT ID_TLISTA, ID_TEHTAVA"
+                . " FROM TEHTAVALISTANTEHTAVA"
+                . " WHERE ID_TLISTA = :tlista"
+                . " AND ID_TEHTAVA = :tehtava")
+            ->bind(':tlista', $tlista)
+            ->bind(':tehtava', $tehtava)
+            ->getOne(get_called_class());
 	}
 }
