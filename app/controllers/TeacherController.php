@@ -11,12 +11,24 @@ namespace App\App\Controllers;
 use App\Core\App;
 use App\App\Models\Teacher;
 use App\App\Models\User;
+use App\App\Models\TaskList;
+use App\App\Models\Gate;
 
 class TeacherController
 {
+    public function __construct(){
+        if(Gate::hasRole('opiskelija'))
+            header('Location:/student-home');
+    }
+    public function index()
+    {
+        $tasklists = TaskList::findAllWhere("ID_KAYTTAJA", $_SESSION['id_kayttaja']);
+
+        return view('teacher-home', compact('tasklists'));
+    }
     public function create()
     {
-        return view('teacher-login');
+        return view('login');
     }
 
     public function save()
@@ -31,9 +43,9 @@ class TeacherController
             $_SESSION['onro'] = $teacher->ONRO;
             $_SESSION['rooli'] = $user->ROOLI;
 
-            header('Location: /');
+            header('Location: /teacher-home');
         }
 
-        return view('teacher-login', ['message' => 'Opettajanumero tai salasana väärin.']);
+        return view('login', ['message' => 'Opettajanumero tai salasana väärin.']);
     }
 }

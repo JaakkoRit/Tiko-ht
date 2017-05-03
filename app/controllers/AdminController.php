@@ -5,12 +5,23 @@ namespace App\App\Controllers;
 use App\App\Models\User;
 use App\Core\App;
 use App\App\Models\Admin;
+use App\App\Models\Gate;
 
 class AdminController
 {
+    public function __construct(){
+        if(Gate::hasRole('opiskelija'))
+            header('Location:/student-home');
+        else if(Gate::hasRole('opettaja') )
+            header('Location:/teacher-home');
+    }
+    public function index()
+    {
+        return view('admin-home', compact('sessions'));
+    }
     public function create()
     {
-        return view('admin-login');
+        return view('login');
     }
 
     public function save()
@@ -24,9 +35,9 @@ class AdminController
             $_SESSION['nimi'] = $admin->NIMI;
             $_SESSION['rooli'] = $user->ROOLI;
 
-            header('Location: /');
+            header('Location: /admin-home');
         }
 
-        return view('admin-login', ['message' => 'Nimi tai salasana väärin.']);
+        return view('login', ['message' => 'Nimi tai salasana väärin.']);
     }
 }

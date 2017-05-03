@@ -1,48 +1,55 @@
 <?php require "_header.view.php"; ?>
 
-    <section>
-        <div>
+<?php require "_navbar.view.php"; ?>
+
+<?php require "_sidebar.view.php"; ?>
+
+        <div class="container">
             <?php foreach ($tasklistArray as $tasklist):?>
-                <h1>Tehvalista <?php echo $tasklist->ID_TLISTA;?>:n sessioiden raportti</h1>
-                <table>
-                    <tr>
-                        <th>Nopein suoritus</th>
-                        <th>Hitain suoritus</th>
-                        <th>Keskimääräinen suoritus</th>
-                    </tr>
-                    <?php $fastest = 0; $slowest = 0;$freq = 0; $avgtime = 0; $timesum = 0;
-                    foreach ($sessionArray as $session){
-                        if($session->LOPAIKA != null) {
-                            if ($session->ID_TLISTA == $tasklist->ID_TLISTA) {
-                                $time = $session->ALKAIKA;
-                                sscanf($time, "%d:%d:%d", $hours, $minutes, $seconds);
-                                $strtime = isset($seconds) ? $hours * 3600 + $minutes * 60 + $seconds : $hours * 60 + $minutes;
+                <h3>Tehvalista <?php echo $tasklist->ID_TLISTA;?>:n sessioiden raportti</h3>
+                <div class="row">
+                    <div class="col-sm-5">
+                        <table>
+                            <tr>
+                                <th>Nopein suoritus</th>
+                                <th>Hitain suoritus</th>
+                                <th>Keskimääräinen suoritus</th>
+                            </tr>
+                            <?php $fastest = 0; $slowest = 0;$freq = 0; $avgtime = 0; $timesum = 0;
+                            foreach ($sessionArray as $session){
+                                if($session->LOPAIKA != null) {
+                                    if ($session->ID_TLISTA == $tasklist->ID_TLISTA) {
+                                        $time = $session->ALKAIKA;
+                                        sscanf($time, "%d:%d:%d", $hours, $minutes, $seconds);
+                                        $strtime = isset($seconds) ? $hours * 3600 + $minutes * 60 + $seconds : $hours * 60 + $minutes;
 
-                                $time = $session->LOPAIKA;
-                                sscanf($time, "%d:%d:%d", $hours, $minutes, $seconds);
-                                $endtime = isset($seconds) ? $hours * 3600 + $minutes * 60 + $seconds : $hours * 60 + $minutes;
+                                        $time = $session->LOPAIKA;
+                                        sscanf($time, "%d:%d:%d", $hours, $minutes, $seconds);
+                                        $endtime = isset($seconds) ? $hours * 3600 + $minutes * 60 + $seconds : $hours * 60 + $minutes;
 
-                                $timedif = $endtime - $strtime;
-                                if ($timedif < $fastest || $fastest == 0)
-                                    $fastest = $timedif;
-                                if ($timedif > $slowest)
-                                    $slowest = $timedif;
-                                $freq++;
-                                $timesum = $timesum + $timedif;
-                                $avgtime = $timesum / $freq;
-                            }
-                        }
-                    }?>
-                    <tr>
-                        <td><?php echo "$fastest sekuntia";?></td>
-                        <td><?php echo "$slowest sekuntia";?></td>
-                        <td><?php echo "$avgtime sekuntia";?></td>
-                    </tr>
-                </table>
+                                        $timedif = $endtime - $strtime;
+                                        if ($timedif < $fastest || $fastest == 0)
+                                            $fastest = $timedif;
+                                        if ($timedif > $slowest)
+                                            $slowest = $timedif;
+                                        $freq++;
+                                        $timesum = $timesum + $timedif;
+                                        $avgtime = $timesum / $freq;
+                                    }
+                                }
+                            }?>
+                            <tr>
+                                <td><?php echo "$fastest sekuntia";?></td>
+                                <td><?php echo "$slowest sekuntia";?></td>
+                                <td><?php echo "$avgtime sekuntia";?></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
                 <br>
             <?php endforeach;?>
         </div>
-    </section>
+    </div>
 
 <?php require 'message.view.php'; ?>
 

@@ -6,6 +6,7 @@ use App\App\Models\Answer;
 use App\App\Models\Session;
 use App\App\Models\Task;
 use App\App\Models\TaskList;
+use App\App\Models\Query;
 use App\Core\App;
 use App\Core\Validator;
 
