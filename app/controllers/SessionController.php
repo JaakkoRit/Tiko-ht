@@ -3,6 +3,7 @@
 namespace App\App\Controllers;
 
 use App\App\Models\Answer;
+use App\App\Models\Attempt;
 use App\App\Models\Session;
 use App\App\Models\Task;
 use App\App\Models\TaskList;
@@ -39,7 +40,9 @@ class SessionController
 
         $task = $tasks[$taskIndex];
 
-        return view('session', compact('task', 'taskIndex', 'sessionId', 'timeAtStart', 'courses', 'students', 'courseCompletion'));
+        $queryResult = queryToHtml(getQueryResult());
+
+        return view('session', compact('task', 'taskIndex', 'sessionId', 'timeAtStart', 'courses', 'students', 'courseCompletion', 'queryResult'));
     }
 
     public function save()
@@ -69,11 +72,11 @@ class SessionController
         } catch (\Exception $e) {
             $error = $e->getMessage();
         }
+        $_SESSION['queryResult'] = $answer;
 
         $correct = false;
         foreach($lowerCaseAnswersArray as $row){
-            $exmplAnswer = Query::rawQuery($row);
-            if($answer == $exmplAnswer)
+            if($answer == Query::rawQuery($row))
                 $correct = true;
         }
 
