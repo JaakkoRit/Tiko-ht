@@ -270,7 +270,8 @@ abstract class Model
             ->query("SELECT DISTINCT O.ID_KAYTTAJA, O.ONRO, O.NIMI, O.PAAAINE, O.SALASANA"
                 . " FROM OPISKELIJA O, SESSIO S"
                 . " WHERE O.ID_KAYTTAJA = S.ID_KAYTTAJA"
-                . " AND S.ID_LUOJA = :id")
+                . " AND S.ID_LUOJA = :id"
+                . " AND S.LOPAIKA IS NOT NULL")
             ->bind(':id', $id)
             ->getAll(get_called_class());
     }
