@@ -1,3 +1,4 @@
+</div>
 <footer class="footer navbar-inverse">
     <div class="container-fluid text-muted text-center">
         <div class="row">

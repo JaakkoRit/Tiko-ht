@@ -22,3 +22,10 @@ $routes = "/../app/routes.php";
 
 Router::define($routes)
     ->fire($request->getPathInfo(), $request->getMethod());
+
+/*try {
+
+} catch (Exception $e) {
+    $_SESSION['errors'] = [$e->getMessage()];
+    //header('Location: ' . getHomePage());
+}*/

@@ -62,14 +62,21 @@ class SessionController
         $lowerCaseAnswersArray = answersLowerCase($exmplanswers);
         $lowerCaseAnswer = strtolower($req->get('vastaus'));
 
-        $answer = Query::rawQuery($lowerCaseAnswer);
+        $answer = null;
 
-        $correct = null;
+        try {
+            $answer = Query::rawQuery($lowerCaseAnswer);
+        } catch (\Exception $e) {
+            $error = $e->getMessage();
+        }
+
+        $correct = false;
         foreach($lowerCaseAnswersArray as $row){
             $exmplAnswer = Query::rawQuery($row);
             if($answer == $exmplAnswer)
                 $correct = true;
         }
+
         if ($correct)
         {
             $db->beginTransaction();
@@ -102,6 +109,7 @@ class SessionController
             }
             catch (\Exception $e) {
                 $db->rollback();
+                header("Location: $previousPage");
             }
         }
 

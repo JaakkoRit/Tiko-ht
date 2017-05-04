@@ -12,6 +12,7 @@ class Session extends Model
     public $ID_SESSIO;
     public $ID_KAYTTAJA;
     public $ID_TLISTA;
+    public $ID_LUOJA;
     public $ALKAIKA;
     public $LOPAIKA;
 }
