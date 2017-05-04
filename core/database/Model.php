@@ -25,7 +25,8 @@ abstract class Model
                 WHERE `TABLE_SCHEMA`='tiko' 
                 AND `TABLE_NAME`='$table'";
     }
-    public static function rawQuery($query){
+
+    public static function rawQuery($query) {
         return App::get('database')
             ->query($query)
             ->getAll(get_called_class());

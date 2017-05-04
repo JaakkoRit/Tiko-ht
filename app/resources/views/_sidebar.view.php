@@ -14,5 +14,12 @@
                     <li><a href="/teacher-home" class="button">Takaisin<br>etusivulle</a> </li>
                 <?php endif; ?>
             <?php endif;?>
+            <?php if (\App\App\Models\Gate::hasRole('opiskelija')): ?>
+                <?php foreach ($sessions as $session) : ?>
+                    <li>
+                        <a href="/session?sessionid=<?= $session->ID_SESSIO; ?>&taskIndex=0">Sessio</a>
+                    </li>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </ul>
     </nav>

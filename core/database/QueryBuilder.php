@@ -13,7 +13,7 @@ class QueryBuilder {
 	}
 
 	public function query($query) {
-		$this->statement = $this->pdo->prepare($query);
+        $this->statement = $this->pdo->prepare($query);
 		return $this;
 	}
 
@@ -44,7 +44,7 @@ class QueryBuilder {
 
 	public function getAll($asClass) {
 		$this->execute();
-		return $this->statement->fetchAll(\PDO::FETCH_CLASS, $asClass);
+        return $this->statement->fetchAll(\PDO::FETCH_CLASS, $asClass);
 	}
 
 	public function getOne($asClass) {
