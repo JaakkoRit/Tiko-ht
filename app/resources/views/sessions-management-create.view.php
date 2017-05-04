@@ -23,6 +23,6 @@
     <?php endforeach; ?>
 
 <?php
-require 'message.view.php';
-require 'errors.view.php';
-require "_footer.view.php";
+    require 'message.view.php';
+    require 'errors.view.php';
+    require "_footer.view.php";

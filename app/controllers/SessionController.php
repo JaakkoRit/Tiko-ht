@@ -3,7 +3,6 @@
 namespace App\App\Controllers;
 
 use App\App\Models\Answer;
-use App\App\Models\Attempt;
 use App\App\Models\Session;
 use App\App\Models\Task;
 use App\App\Models\TaskList;

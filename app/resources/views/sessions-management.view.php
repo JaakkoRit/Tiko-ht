@@ -18,6 +18,6 @@
 
     <a href="/sessions-management/create" class="button">Luo uusi sessio</a>
 
-<?php require 'message.view.php'; ?>
-
-<?php require "_footer.view.php"; ?>
+<?php
+    require 'message.view.php';
+    require "_footer.view.php";

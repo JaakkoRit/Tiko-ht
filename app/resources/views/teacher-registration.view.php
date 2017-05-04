@@ -1,5 +1,7 @@
-<?php require "_header.view.php"; ?>
-<?php require "_basicnavbar.view.php"; ?>
+<?php
+    require "_header.view.php";
+    require "_basicnavbar.view.php";
+?>
 <div class="container login-container">
 	<div class="row login">
 		<div class="col-md-4 col-md-offset-4">

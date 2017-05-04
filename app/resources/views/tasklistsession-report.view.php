@@ -1,8 +1,8 @@
-<?php require "_header.view.php"; ?>
-
-<?php require "_navbar.view.php"; ?>
-
-<?php require "_sidebar.view.php"; ?>
+<?php
+require "_header.view.php";
+require "_navbar.view.php";
+require "_sidebar.view.php";
+?>
 
         <div class="container page-content">
             <?php foreach ($tasklistArray as $tasklist):?>

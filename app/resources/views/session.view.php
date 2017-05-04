@@ -1,8 +1,8 @@
-<?php require "_header.view.php"; ?>
-
-<?php require "_navbar.view.php"; ?>
-
-<?php require "_basicsidebar.view.php"; ?>
+<?php
+    require "_header.view.php";
+    require "_navbar.view.php";
+    require "_basicsidebar.view.php";
+?>
 
         <div class="container page-content">
 			<div class="row">

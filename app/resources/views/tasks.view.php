@@ -23,6 +23,6 @@
 
     <a href="/tasks/create" class="button">Lisää tehtävä</a>
 
-<?php require 'message.view.php'; ?>
-
-<?php require "_footer.view.php"; ?>
+<?php
+    require 'message.view.php';
+    require "_footer.view.php";
