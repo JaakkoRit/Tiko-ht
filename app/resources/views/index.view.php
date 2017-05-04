@@ -1,3 +1,4 @@
-<?php require "_header.view.php"; ?>
-<?php require "login.view.php"; ?>
-<?php require "_footer.view.php"; ?>
+<?php
+    require "_header.view.php";
+    require "login.view.php";
+    require "_footer.view.php";

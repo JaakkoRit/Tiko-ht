@@ -1,6 +1,8 @@
-<?php require "_header.view.php"; ?>
-<?php require "_navbar.view.php"; ?>
-<?php require "_sidebar.view.php"; ?>
+<?php
+    require "_header.view.php";
+    require "_navbar.view.php";
+    require "_sidebar.view.php";
+?>
 
     <h1>Kaikki oppilaat</h1>
     <ul class="list-group">

@@ -1,4 +1,3 @@
-<div class="content">
     <nav class="navbar navbar-inverse sidebar-left collapse navbar-collapse no-transition" id="sidebar">
         <?php if (isset($_SESSION['nimi'])) : ?>
             <p class="navbar-text"><?php echo $_SESSION['nimi']; ?></p>

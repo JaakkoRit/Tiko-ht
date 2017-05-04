@@ -89,9 +89,17 @@ function updateTaskCompletion($req) {
         date("Y-m-d H:i:s")
     );
 }
+function getQueryResult(){
+    $queryResult = [];
 
-function arrayToHtml($tableName)
-{
+    if(isset($_SESSION['queryResult'])){
+        $queryResult = $_SESSION['queryResult'];
+        unset($_SESSION['queryResult']);
+    }
+    return $queryResult;
+}
+
+function arrayToHtml($tableName){
     $table = Query::rawQuery(Session::selectFrom($tableName, '*'));
     $columnNames = Query::rawQuery(Session::selectColumnNames($tableName));
     $tableHtml = "<table style=\"width:100%\"><caption>$tableName</caption><tr>";
@@ -165,4 +173,21 @@ function getHomePage() {
         return '/admin-home';
     }
     return '/';
+}
+function queryToHtml($table){
+    $tableHtml = "<table style=\"width:100%\">";
+    foreach($table as $row){
+        $first = true;
+        $tableHtml .= "<tr>";
+        foreach($row as $index) {
+            if ($first) {
+                $first = false;
+            }
+            else
+                $tableHtml .= "<td>" . $index . "</td>";
+        }
+        $tableHtml .= "</tr>";
+    }
+    $tableHtml .= "</table><br>";
+    return $tableHtml;
 }

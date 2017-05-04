@@ -1,15 +1,15 @@
-<?php require "_header.view.php"; ?>
+<?php
+    require "_header.view.php";
+    require "_navbar.view.php";
+    require "_sidebar.view.php";
+?>
 
-<?php require "_navbar.view.php"; ?>
-
-<?php require "_sidebar.view.php"; ?>
-
-    <div class="container">
-        <?php foreach ($tasklistArray as $tasklist): ?>
-            <h3>Sessiot tehtävälistasta <?= $tasklist->ID_TLISTA; ?></h3>
-            <div class="row">
-                <div class="col-sm-5">
-                    <table>
+    <div class="container page-content">
+        <?php foreach ($tasklistArray as $tasklist):?>
+         <div class="row">
+             <div class="col-md-5 col-sm-12 styledtable">
+                <h3>Sessiot tehtävälistasta <?php Echo $tasklist->ID_TLISTA;?></h3>
+                   <table>
                         <tr>
                             <th>Sessio</th>
                             <th>Opiskelija</th>
@@ -59,6 +59,7 @@
             <br>
         <?php endforeach; ?>
     </div>
-<?php require 'message.view.php'; ?>
 
-<?php require "_footer.view.php"; ?>
+<?php
+    require 'message.view.php';
+    require "_footer.view.php";

@@ -17,6 +17,10 @@ body{
 	flex: 1;
 	display: flex;
 }
+.page-content{
+	padding-left: 2em;
+	width: 100%;
+}
 
 .navbar-brand{
 	margin: 0em !important;
@@ -43,6 +47,7 @@ body{
 
 .sidebar-left {
 	height: 100%;
+	width: 140px;
 	margin: 0em;
 	padding: 0em;
 }
@@ -76,18 +81,24 @@ body{
 	-o-transition: height 0.01s;
 	transition: height 0.01s;
 }
-table {
-    font-family: arial, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
+.styledtable{
+	padding: 0em;
+	font-family: arial, sans-serif;
 }
 
 td, th {
+	width: 10em;
     border: 1px solid #dddddd;
     text-align: left;
-    padding: 8px;
+	padding: 0em;
+    padding-top: 1em;
+	padding-left: 0.5em;
 }
 
-button{
-	margin: 0.5em;
+.styledtable table tr:nth-child(even){
+    background-color: lightgrey;
+}
+
+.answer{
+	width: 100%;
 }

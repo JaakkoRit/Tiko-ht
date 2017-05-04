@@ -16,6 +16,6 @@
         </form>
     <?php endif; ?>
 
-<?php require 'message.view.php'; ?>
-
-<?php require "_footer.view.php"; ?>
+<?php
+    require 'message.view.php';
+    require "_footer.view.php";

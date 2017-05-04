@@ -1,14 +1,14 @@
-<?php require "_header.view.php"; ?>
+<?php
+require "_header.view.php";
+require "_navbar.view.php";
+require "_sidebar.view.php";
+?>
 
-<?php require "_navbar.view.php"; ?>
-
-<?php require "_sidebar.view.php"; ?>
-
-        <div class="container">
+        <div class="container page-content">
             <?php foreach ($tasklistArray as $tasklist):?>
-                <h3>Tehvalista <?php echo $tasklist->ID_TLISTA;?>:n sessioiden raportti</h3>
                 <div class="row">
-                    <div class="col-sm-5">
+                    <div class="col-md-5 col-sm-12 styledtable">
+                        <h3>Tehvalista <?php echo $tasklist->ID_TLISTA;?>:n sessioiden raportti</h3>
                         <table>
                             <tr>
                                 <th>Nopein suoritus</th>
@@ -51,7 +51,6 @@
                 <br>
             <?php endforeach;?>
         </div>
-    </div>
 
 <?php require 'message.view.php'; ?>
 
