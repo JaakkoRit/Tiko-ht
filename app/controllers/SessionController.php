@@ -28,9 +28,9 @@ class SessionController
             header('Location: /student-home');
         }
 
-        $courses = arrayToHtml('kurssit');
-        $students = arrayToHtml('opiskelijat');
-        $courseCompletion = arrayToHtml('suoritukset');
+        $courses = tableToHtml('kurssit');
+        $students = tableToHtml('opiskelijat');
+        $courseCompletion = tableToHtml('suoritukset');
 
         $timeAtStart = date("Y-m-d H:i:s");
 

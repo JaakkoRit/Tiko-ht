@@ -16,8 +16,10 @@ class StudentController
             header('Location:/teacher-home');
         else{
             $sessions = Session::findAllWhere('ID_KAYTTAJA', auth()->ID_KAYTTAJA);
+            $completedSessions = Session::findAllCompletedSessions('ID_KAYTTAJA', auth()->ID_KAYTTAJA);
+            $completedSessionsReport = getStudentReport($completedSessions);
 
-            return view('student-home', compact('sessions'));
+            return view('student-home', compact('sessions', 'completedSessionsReport'));
         }
     }
 

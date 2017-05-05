@@ -19,6 +19,7 @@ body{
 }
 .page-content{
 	padding-left: 2em;
+	padding-right: 2em;
 	width: 100%;
 }
 
@@ -47,7 +48,7 @@ body{
 
 .sidebar-left {
 	height: 100%;
-	width: 140px;
+	min-width: 140px;
 	margin: 0em;
 	padding: 0em;
 }
@@ -81,8 +82,16 @@ body{
 	-o-transition: height 0.01s;
 	transition: height 0.01s;
 }
-.styledtable{
+
+.nopadding, .styledtable{
 	padding: 0em;
+}
+
+.nomargin{
+	margin: 0em;
+}
+
+.styledtable{
 	font-family: arial, sans-serif;
 }
 
@@ -99,6 +108,30 @@ td, th {
     background-color: lightgrey;
 }
 
-.answer{
+.full-width{
 	width: 100%;
+}
+
+.scroll-list{
+	max-height:30em;
+    overflow-y:auto;  
+}
+
+.bordered-list{
+	border-style: solid;
+	border-width: 1px;
+	border-color: lightgrey;
+}
+
+.list-form-item{
+	margin: 0em;
+	padding-bottom: 1em;
+}
+
+.stretched-table{
+	width: 100%;
+}
+
+.bottom-margin{
+	margin-bottom: 1em;
 }

@@ -2,10 +2,8 @@
 
 namespace App\App\Controllers;
 
-use App\App\Models\Session;
-use App\App\Models\Attempt;
 use App\App\Models\TaskList;
-use App\App\Models\Student;
+use App\App\Models\Session;
 use App\App\Models\Gate;
 
 class ReportController
@@ -16,20 +14,42 @@ class ReportController
     }
 
     public function showSessionRaport(){
-        $taskListCreator = $_SESSION['id_kayttaja'];
         $tasklistArray = TaskList::findAllWhere("ID_KAYTTAJA", $_SESSION['id_kayttaja']);
-        $sessionArray = Session::all();
-        $studentArray = Student::all();
-        $attemptArray = Attempt::all();
+        $report = null;
 
-        return view('session-report', compact('sessionArray', 'attemptArray', 'studentArray', 'tasklistArray', 'taskListCreator'));
+        foreach ($tasklistArray as $tasklist) {
+            $report .= getSessionReport($tasklist);
+        }
+
+        return view('session-report', compact('report'));
     }
 
     public function showTaskListSessionReport(){
-        $taskListCreator = $_SESSION['id_kayttaja'];
         $tasklistArray = TaskList::findAllWhere("ID_KAYTTAJA", $_SESSION['id_kayttaja']);
         $sessionArray = Session::all();
+        $report = null;
+        foreach ($tasklistArray as $tasklist) {
+            $report .= getTaskListSessionReport($sessionArray, $tasklist);
+        }
 
-        return view('tasklistsession-report', compact('tasklistArray', 'sessionArray', 'taskListCreator'));
+        return view('tasklistsession-report', compact('report'));
+    }
+    public function showTaskListTaskReport(){
+        $tasklistArray = TaskList::findAllWhere("ID_KAYTTAJA", $_SESSION['id_kayttaja']);
+
+        $report = null;
+        foreach ($tasklistArray as $tasklist) {
+            $report .= getTaskReport($tasklist);
+        }
+        return view('tasklisttask-report', compact('report'));
+    }
+    public function showTaskDifficultyReport(){
+        $tasklistArray = TaskList::findAllWhere("ID_KAYTTAJA", $_SESSION['id_kayttaja']);
+
+        $report = null;
+        foreach ($tasklistArray as $tasklist) {
+            $report .= getTaskDifficultyReport($tasklist);
+        }
+        return view('taskdifficulty-report', compact('report'));
     }
 }
