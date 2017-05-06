@@ -10,6 +10,7 @@
             <li><a href="/tasklistsession-report">Sessioiden<br>suoritusaikaraportit (R2)</a></li>
             <li><a href="/tasklisttask-report">Tehtävien<br>suoritusraportit (R3)</a></li>
             <li><a href="/taskdifficulty-report">Tehtävien<br>vaikeusraportit (R4)</a></li>
+            <li><a href="/taskquery-report">Tehtävien<br>kyselyraportti (R5)</a></li>
             <li><a href="/tasksuccess-report">Tehtävissä<br>onnistuminen (R6)</a></li>
 
             <li><a href="/tasks">Tehtävät</a></li>

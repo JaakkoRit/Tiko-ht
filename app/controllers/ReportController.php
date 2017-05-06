@@ -52,6 +52,11 @@ class ReportController
         }
         return view('taskdifficulty-report', compact('report'));
     }
+    public function showTaskQueryReport(){
+
+        $report = getTaskQueryReport();
+        return view('taskquery-report', compact('report'));
+    }
     public function showTaskSuccessReport(){
 
         $report = getTaskSuccess();

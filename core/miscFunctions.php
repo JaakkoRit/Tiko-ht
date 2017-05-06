@@ -396,6 +396,75 @@ function getTaskDifficultyReport($tasklist){
     return reportToHtml($taskReportArray, array("Tehtävä", "Keskimääräinen suoritusaika", "Onnistuneesti ratkaistujen tehtävien yritysten keskimääräinen lkm", "Ratkaisemattomien prosenttiosuus"), "Tehtävälistan ".$tasklist->ID_TLISTA." tehtävät vaikeusjärjestyksessä");
 }
 
+function getTaskQueryReport(){
+    $tasksQuery = Task::findTasksSortedByQueryType();
+    if(sizeof($tasksQuery) != 0){
+        $taskReportArray = array();
+        $taskReport = array();
+        $tasksByType = array();
+        $tasksByType[0][0] = $tasksQuery[0];
+        if(sizeof($tasksQuery) > 1){
+            $count = 0;
+            $count2 = 0;
+            for($i = 1; $i<sizeof($tasksQuery) - 1; $i++){
+                if($tasksQuery[$i]->KYSELYTYYPPI == $tasksQuery[$i - 1]->KYSELYTYYPPI)
+                    $count2++;
+                else{
+                    $count++;
+                    $count2 = 0;
+                }
+                $tasksByType[$count][$count2] = $tasksQuery[$i];
+            }
+        }
+        $arrayIndex = 0;
+        foreach($tasksByType as $tasks){
+            $taskCompletions = array();
+            for($i = 0; $i < sizeof($tasks) - 1; $i++){
+                $tempArray = TaskCompletion::findAllCompletedTaskCompletions("ID_TEHTAVA", $tasks[$i]->ID_TEHTAVA, "LOPAIKA");
+                foreach($tempArray as $temp){
+                    array_push($taskCompletions, $temp);
+                }
+            }
+            if(sizeof($taskCompletions) != 0){
+                $sum = 0;
+                $count = 0;
+                $allAttempts = 0;
+                foreach($taskCompletions as $taskCompletion){
+                    $attempts = Attempt::findAllWhere("ID_SESSIO", $taskCompletion->ID_SESSIO);
+                    $sum = $sum + getSessionTime($taskCompletion->ALKAIKA, $taskCompletion->LOPAIKA);
+                    $allAttempts = $allAttempts + sizeof($attempts);
+                    $count++;
+                }
+
+                $avgtime = gmdate("H:i:s", $sum / $count);
+                $avgAttempts = number_format((float)$allAttempts / $count, 1, '.', '');
+
+
+                $taskReport[1] = $avgAttempts;
+                $taskReport[2] = $avgtime;
+            }
+            else {
+                $taskReport[1] = 0;
+                $taskReport[2] = 0;
+            }
+            $taskReport[0] = $tasks[0]->KYSELYTYYPPI;
+            $taskReportArray[$arrayIndex] = $taskReport;
+        }
+        return reportToHtml($taskReportArray, array("Tyyppi", "Yritysten keskimäärä", "Tehtäviin keskimäärin käytetty aika"), "Tehtävien kyselytyypeittäinen raportti");
+    }
+    else
+        return "Ei raportoitavia tehtäviä";
+
+    /*$count = 0;
+    foreach($tasks as $task){
+        $attempts = Attempt::findAllWhere("ID_TEHTAVA", $task->ID_TEHTAVA);
+        $taskReportArray[$count][0] = $task->ID_TEHTAVA;
+        $taskReportArray[$count][1] = $task->KYSELYTYYPPI;
+        $taskReportArray[$count][2] = gmdate("H:i:s", getMeanTime($attempts));
+        $taskReportArray[$count][3] = getMeanAttempts($task);
+    }*/
+}
+
 function getTaskSuccess(){
 
 }

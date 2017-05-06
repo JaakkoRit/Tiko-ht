@@ -29,6 +29,7 @@ $router->get('/session-report', 'ReportController@showSessionRaport');
 $router->get('/tasklistsession-report', 'ReportController@showTaskListSessionReport');
 $router->get('/tasklisttask-report', 'ReportController@showTaskListTaskReport');
 $router->get('/taskdifficulty-report', 'ReportController@showTaskDifficultyReport');
+$router->get('/taskquery-report', 'ReportController@showTaskQueryReport');
 $router->get('/tasksuccess-report', 'ReportController@showTaskSuccessReport');
 
 $router->get('/tasks', 'TaskController@index');

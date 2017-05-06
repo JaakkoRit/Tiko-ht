@@ -82,6 +82,24 @@ abstract class Model
             ->getOne(get_called_class());
     }
 
+    public static function findAllCompletedTaskCompletions($field, $value, $field2)
+    {
+        return App::get('database')
+            ->query("SELECT * FROM "
+                . static::getTableName()
+                . " WHERE " . $field . " = :id"
+                . " AND " . $field2 . " IS NOT NULL")
+            ->bind(':id', $value)
+            ->getAll(get_called_class());
+    }
+
+    public static function findTasksSortedByQueryType()
+    {
+        return App::get('database')
+            ->query("SELECT * FROM tehtava ORDER BY kyselytyyppi DESC")
+            ->getAll(get_called_class());
+    }
+
     public static function findAllAttempts($field, $value, $field2, $value2)
     {
         return App::get('database')
