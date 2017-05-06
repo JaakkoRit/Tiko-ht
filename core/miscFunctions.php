@@ -290,7 +290,6 @@ function getTaskListSessionReport($sessionArray, $tasklist){
 function getTaskDifficultyReport($tasklist){
     $tasks = Task::findAllTasksFromTaskList($tasklist->ID_TLISTA);
     $taskReportArray = array();
-    $tasksraw = null;
     $count = 0;
     foreach($tasks as $task){
         $taskCompletions = TaskCompletion::findAllWhere("ID_TEHTAVA", $task->ID_TEHTAVA);
@@ -371,18 +370,18 @@ function getMeanAttempts($task){
 
 function getUnsolvedPercentage($task, $taskCompletions){
     $failedAttempts = Attempt::findAllAttempts("ID_TEHTAVA", $task->ID_TEHTAVA, "OLIKOOIKEIN", 0);
-    $failedCunt = 0;
+    $failedCount = 0;
     foreach($failedAttempts as $attempt){
         if($attempt->YRITYSKERTA == 3)
-            $failedCunt++;
+            $failedCount++;
     }
     $completed = 0;
     foreach($taskCompletions as $taskCompletion){
         if($taskCompletion->LOPAIKA != null)
             $completed++;
     }
-    if($taskCompletions != 0)
-        return  number_format((float)$failedCunt / $completed * 100, 0, '.', '')."%";
+    if($completed != 0)
+        return  number_format((float)$failedCount / $completed * 100, 0, '.', '')."%";
     else
         return 0;
 }
