@@ -3,6 +3,10 @@
     require "_basicnavbar.view.php";
 ?>
 <div class="container login-container">
+	<?php
+		require 'message.view.php';
+		require 'errors.view.php';
+	?>
 	<div class="row login">
 		<div class="col-md-4 col-md-offset-4">
 			<form action="/student-registration" method="POST">
@@ -32,6 +36,4 @@
 </div>
 
 <?php
-    require "message.view.php";
-    require "errors.view.php";
     require "_footer.view.php";

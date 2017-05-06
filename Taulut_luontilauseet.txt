@@ -90,7 +90,7 @@ create table SESSIO (
 	foreign key (ID_KAYTTAJA) references
 	KAYTTAJA,
 	foreign key (ID_TLISTA) references
-	TEHTAVALISTA
+	TEHTAVALISTA,
 	foreign key (ID_LUOJA) references
 	KAYTTAJA
 );
