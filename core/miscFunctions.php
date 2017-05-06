@@ -232,7 +232,7 @@ function getSessionReport($tasklist){
     foreach ($sessionArray as $session){
         $sessionsArray[$count][0] = $session->ID_SESSIO;
         $sessionsArray[$count][1] = Student::findWhere("ID_KAYTTAJA", $session->ID_KAYTTAJA)->NIMI;
-        $sessionsArray[$count][2] = getRightAttemptCount(Attempt::findAllWhere("ID_SESSIO", $session->ID_SESSIO) , $session);
+        $sessionsArray[$count][2] = getRightAttemptCount(Attempt::findAllWhere("ID_SESSIO", $session->ID_SESSIO));
         if ($session->LOPAIKA == null)
             $sessionsArray[$count][3] = "Ei";
         else
