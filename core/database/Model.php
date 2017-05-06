@@ -286,4 +286,87 @@ abstract class Model
             ->bind(':id', $value)
             ->getAll(get_called_class());
     }
+
+    public static function createSchema($id)
+    {
+        App::get('database')
+            ->query(
+                "CREATE SCHEMA ESIMTAULUT$id"
+            )
+            ->execute();
+    }
+
+    public static function createExampleTables($id)
+    {
+        App::get('database')
+            ->query("CREATE TABLE esimtaulut$id.kurssit ("
+                . "id INT,"
+                . "nimi VARCHAR(15) NOT NULL,"
+                . "opettaja VARCHAR(15) NOT NULL,"
+                . "PRIMARY KEY (id))")
+            ->execute();
+
+        App::get('database')
+            ->query("CREATE TABLE esimtaulut$id.opiskelijat ("
+                . "nro INT,"
+                . "nimi VARCHAR(15) NOT NULL,"
+                . "p_aine VARCHAR(15) NOT NULL,"
+                . "PRIMARY KEY (nro))")
+            ->execute();
+
+        App::get('database')
+            ->query("CREATE TABLE esimtaulut$id.suoritukset ("
+                . "k_id INT,"
+                . "op_nro INT NOT NULL,"
+                . "arvosana INT NOT NULL,"
+                . "PRIMARY KEY (k_id, op_nro),"
+                . "FOREIGN KEY(k_id) REFERENCES kurssit,"
+                . "FOREIGN KEY(op_nro) REFERENCES opiskelijat)")
+            ->execute();
+    }
+
+    public static function insertExampleValues($id)
+    {
+        $db = App::get('database');
+        $db->query(
+                "INSERT INTO esimtaulut$id.opiskelijat VALUES (1, 'Maija', 'TKO');"
+                ." INSERT INTO esimtaulut$id.opiskelijat VALUES (2, 'Ville', 'TKO');"
+                ." INSERT INTO esimtaulut$id.opiskelijat VALUES (3, 'Kalle', 'VT');"
+                ." INSERT INTO esimtaulut$id.opiskelijat VALUES (4, 'Liisa', 'VT');"
+            )
+            ->execute();
+
+        $db->query(
+                "INSERT INTO esimtaulut$id.kurssit VALUES (1, 'tkp', 'KI');"
+                ." INSERT INTO esimtaulut$id.kurssit VALUES (2, 'oope', 'JL');"
+                ." INSERT INTO esimtaulut$id.kurssit VALUES (3, 'tiko', 'MJ');"
+            )
+            ->execute();
+
+        $db->query(
+                "INSERT INTO esimtaulut$id.suoritukset VALUES (1, 1, 5);"
+                ." INSERT INTO esimtaulut$id.suoritukset VALUES (1, 2, 4);"
+                ." INSERT INTO esimtaulut$id.suoritukset VALUES (1, 3, 2);"
+                ." INSERT INTO esimtaulut$id.suoritukset VALUES (2, 1, 5);"
+                ." INSERT INTO esimtaulut$id.suoritukset VALUES (2, 2, 3);"
+                ." INSERT INTO esimtaulut$id.suoritukset VALUES (2, 4, 3);"
+                ." INSERT INTO esimtaulut$id.suoritukset VALUES (3, 1, 5);"
+                ." INSERT INTO esimtaulut$id.suoritukset VALUES (3, 2, 4);"
+            )
+            ->execute();
+    }
+
+    public static function setSearchPathTo($path)
+    {
+        App::get('database')
+            ->query("USE $path")
+            ->execute();
+    }
+
+    public static function dropSchema($id)
+    {
+        App::get('database')
+            ->query("DROP SCHEMA esimtaulut$id")
+            ->execute();
+    }
 }

@@ -5,26 +5,40 @@
 ?>
 
         <div class="container page-content">
-			<div class="row">
-				<h1><?= $task->KUVAUS; ?></h1>
-			</div>
-			<div class="row">
-				<form action="/session" method="POST">
-					<div class="col-md-5 col-sm-12 styledtable">
-						<textarea name="vastaus" class="textarea answer" placeholder="Vastaus"></textarea>
-						<input type="hidden" value="<?= $task->ID_TEHTAVA; ?>" name="tehtavaId">
-						<input type="hidden" value="<?= $_GET['sessionid']; ?>" name="sessionId">
-						<input type="hidden" value="<?= $timeAtStart; ?>" name="timeAtStart">
-						<input type="hidden" value="/session?sessionid=<?= $sessionId; ?>&taskIndex=<?= $taskIndex+1; ?>" name="seuraavaSivu">
-						<br>
-						<button type="submit" class="btn btn-lg is-primary btn-primary">Lähetä</button>
-					</div>
-				</form>
-			</div>
+            <?php if (! isset($completed)) : ?>
+                <div class="row">
+                    <h1><?= $task->KUVAUS; ?></h1>
+                </div>
+                <div class="row">
+                    <form action="/session" method="POST">
+                        <div class="col-md-5 col-sm-12 styledtable">
+                            <textarea name="vastaus" class="textarea answer" placeholder="Vastaus"></textarea>
+                            <input type="hidden" value="<?= $task->ID_TEHTAVA; ?>" name="tehtavaId">
+                            <input type="hidden" value="<?= $_GET['sessionid']; ?>" name="sessionId">
+                            <input type="hidden" value="<?= $timeAtStart; ?>" name="timeAtStart">
+                            <input type="hidden" value="/session?sessionid=<?= $sessionId; ?>" name="seuraavaSivu">
+                            <br>
+                            <button type="submit" class="btn btn-lg is-primary btn-primary">Lähetä</button>
+                        </div>
+                    </form>
+                </div>
+            <?php else : ?>
+                <div class="row">
+                    <a href="<?= getHomePage(); ?>" class="btn btn-lg is-primary btn-primary">Etusivulle</a>
+                </div>
+            <?php endif; ?>
             <div class="row">
                 <div class="col-md-5 col-sm-12 styledtable">
                     <br>
-                    <?php echo "Tässä edellisen kyselysi tulos". $queryResult;?>
+                    <strong>Tässä edellisen kyselysi tulos:</strong>
+                    <?= $queryResult; ?>
+                    <?php if (isset($errors) && count($errors) > 0) : ?>
+                        <div class="alert alert-danger">
+                            <?= $errors; ?>
+                        </div>
+                    <?php endif; ?>
+                    <strong>Oikea tulos:</strong>
+                    <?= $correctTable; ?>
                 </div>
             </div>
 			<div class="row">
@@ -33,22 +47,22 @@
 			</div>
 			<div class="row">
 				<div class="col-md-5 col-sm-12 styledtable">
-					<?php echo $courses;?>
+					<?= $courses;?>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-5 col-sm-12 styledtable">
-					<?php echo $students;?>
+					<?= $students;?>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-5 col-sm-12 styledtable">
-					<?php echo $courseCompletion;?>
+					<?= $courseCompletion;?>
 				</div>
 			</div>
         </div>
 
 
-<?php require 'message.view.php'; ?>
-
-<?php require "_footer.view.php"; ?>
+<?php
+    require 'message.view.php';
+    require "_footer.view.php";

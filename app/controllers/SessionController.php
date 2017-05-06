@@ -5,6 +5,7 @@ namespace App\App\Controllers;
 use App\App\Models\Answer;
 use App\App\Models\Session;
 use App\App\Models\Task;
+use App\App\Models\TaskCompletion;
 use App\App\Models\TaskList;
 use App\App\Models\Query;
 use App\Core\App;
@@ -15,39 +16,57 @@ class SessionController
     public function show()
     {
         $req = App::get('request');
-
         $sessionId = $req->get('sessionid');
-        $taskIndex = $req->get('taskIndex');
-
         $session = Session::find($sessionId);
-        $taskList = TaskList::find($session->ID_TLISTA);
-        $tasks = Task::findAllTasksFromTaskList($taskList->ID_TLISTA);
 
-        if (! anyTasksLeft($taskIndex, $tasks, $session))
-        {
-            header('Location: /student-home');
+        if (! sessionConfirmed($session)) {
+            header('Location: ' . getHomePage());
+            die();
+        }
+
+        $tasks = Task::findAllTasksFromTaskList($session->ID_TLISTA);
+        $task = null;
+        $index = null;
+
+        foreach ($tasks as $key => $value) {
+            $taskCompletion = TaskCompletion::findTaskCompletion('ID_TEHTAVA', $value->ID_TEHTAVA, 'ID_SESSIO', $sessionId);
+            if (!$taskCompletion || !$taskCompletion->LOPAIKA) {
+                $task = $value;
+                $index = $key;
+                break;
+            }
         }
 
         $courses = arrayToHtml('kurssit');
         $students = arrayToHtml('opiskelijat');
         $courseCompletion = arrayToHtml('suoritukset');
+        $errors = getErrors();
+        $queryResult = queryToHtml(getQueryResult());
+        $correctTable = queryToHtml(getCorrectTable());
+
+        if (!anyTasksLeft($index, $tasks, $session)) {
+            $completed = true;
+            Query::dropSchema($sessionId);
+            return view('session', compact('completed', 'courses', 'students',
+                'courseCompletion', 'errors', 'queryResult', 'correctTable'));
+        }
 
         $timeAtStart = date("Y-m-d H:i:s");
 
-        setSessionTimeOfBeginning($taskIndex, $session);
-        createTaskCompletion($sessionId, $tasks, $taskIndex, $timeAtStart);
+        if (startOfSession($session)) {
+            setSessionTimeOfBeginning($session);
+            createExampleTables($session->ID_SESSIO);
+        }
 
-        $task = $tasks[$taskIndex];
+        createTaskCompletion($sessionId, $tasks, $index, $timeAtStart);
 
-        $queryResult = queryToHtml(getQueryResult());
-
-        return view('session', compact('task', 'taskIndex', 'sessionId', 'timeAtStart', 'courses', 'students', 'courseCompletion', 'queryResult'));
+        return view('session', compact('task', 'sessionId', 'timeAtStart', 'courses', 'students',
+            'courseCompletion', 'queryResult', 'errors', 'correctTable'));
     }
 
     public function save()
     {
         $req = App::get('request');
-
         $previousPage = $req->headers->get('referer');
         $nextPage = $req->get('seuraavaSivu');
 
@@ -58,62 +77,67 @@ class SessionController
         if (count($errors) > 0) {
             header("Location: $previousPage");
         }
+
         $db = App::get('database');
         $exmplanswers = Answer::findAllWhere('ID_TEHTAVA', $req->get('tehtavaId'));
-
         $lowerCaseAnswersArray = answersLowerCase($exmplanswers);
         $lowerCaseAnswer = strtolower($req->get('vastaus'));
-
-        $answer = null;
-
-        try {
-            $answer = Query::rawQuery($lowerCaseAnswer);
-        } catch (\Exception $e) {
-            $error = $e->getMessage();
-        }
-        $_SESSION['queryResult'] = $answer;
-
+        $result = null;
         $correct = false;
-        foreach($lowerCaseAnswersArray as $row){
-            if($answer == Query::rawQuery($row))
+
+        Query::setSearchPathTo('esimtaulut' . $req->get('sessionId'));
+
+        $db->beginTransaction();
+        try {
+            $result = Query::rawQuery($lowerCaseAnswer);
+            $_SESSION['queryResult'] = $result;
+        } catch (\Exception $e) {
+            $_SESSION['errors'] = $e->getMessage();
+        }
+        $db->rollback();
+
+        $db->beginTransaction();
+        foreach ($lowerCaseAnswersArray as $row) {
+            $correctTable = Query::rawQuery($row);
+            $_SESSION['correctTable'] = $correctTable;
+            if ($result == $correctTable) {
                 $correct = true;
+                $db->commit();
+                break;
+            } else {
+                $db->rollback();
+            }
         }
 
-        if ($correct)
-        {
+        Query::setSearchPathTo('tiko');
+
+        if ($correct) {
             $db->beginTransaction();
             try {
                 createAttempt($req, $lowerCaseAnswer, true);
                 updateTaskCompletion($req);
                 $db->commit();
                 header("Location: $nextPage");
-            }
-            catch (\Exception $e) {
+            } catch (\Exception $e) {
                 $db->rollback();
+                header("Location: $nextPage");
             }
-        }
-        else
-        {
+        } else {
             $db->beginTransaction();
             try {
                 $attemptCount = createAttempt($req, $lowerCaseAnswer, false);
-                if ($attemptCount >= 2)
-                {
+                if ($attemptCount >= 2) {
                     updateTaskCompletion($req);
                     $db->commit();
                     header("Location: $nextPage");
-                }
-                else
-                {
+                } else {
                     $db->commit();
                     header("Location: $previousPage");
                 }
-            }
-            catch (\Exception $e) {
+            } catch (\Exception $e) {
                 $db->rollback();
                 header("Location: $previousPage");
             }
         }
-
     }
 }

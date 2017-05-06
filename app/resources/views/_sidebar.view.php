@@ -16,7 +16,7 @@
             <?php if (\App\App\Models\Gate::hasRole('opiskelija')): ?>
                 <?php foreach ($sessions as $session) : ?>
                     <li>
-                        <a href="/session?sessionid=<?= $session->ID_SESSIO; ?>&taskIndex=0">Sessio</a>
+                        <a href="/session?sessionid=<?= $session->ID_SESSIO; ?>">Sessio</a>
                     </li>
                 <?php endforeach; ?>
             <?php endif; ?>
