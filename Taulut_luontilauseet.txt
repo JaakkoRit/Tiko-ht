@@ -1,4 +1,4 @@
-create table KAYTTAJA (
+﻿create table KAYTTAJA (
 	ID_KAYTTAJA int AUTO_INCREMENT,
 	ROOLI varchar(15) not null,
 	primary key (ID_KAYTTAJA)
