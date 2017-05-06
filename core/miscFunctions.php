@@ -347,7 +347,7 @@ function getTaskReport($tasklist){
         $taskReportArray[$count][2] = gmdate("H:i:s", getMeanTime($attempts));
         $count++;
     }
-    return reportToHtml($taskReportArray, array("Tehtävä", "Onnistumisprosentti", "Keskim. suoritusaika"), "Tehtävän tilastot");
+    return reportToHtml($taskReportArray, array("Tehtävä", "Onnistumisprosentti", "Keskim. suoritusaika"), "Tehtävälistan ".$tasklist->ID_TLISTA . " tehtävien tilastot");
 }
 function getTaskListSessionReport($sessionArray, $tasklist){
     $fastest = 0; $slowest = 0;$freq = 0; $avgtime = 0; $timesum = 0;
@@ -395,6 +395,11 @@ function getTaskDifficultyReport($tasklist){
     usort($taskReportArray, build_sorter(1));
     return reportToHtml($taskReportArray, array("Tehtävä", "Keskimääräinen suoritusaika", "Onnistuneesti ratkaistujen tehtävien yritysten keskimääräinen lkm", "Ratkaisemattomien prosenttiosuus"), "Tehtävälistan ".$tasklist->ID_TLISTA." tehtävät vaikeusjärjestyksessä");
 }
+
+function getTaskSuccess(){
+
+}
+
 function getRightAttemptCount($attemptArray){
     $rightcount = 0;
     foreach ($attemptArray as $attempt) {
@@ -410,7 +415,11 @@ function getSessionTime($start, $finish){
     sscanf($finish, "%d:%d:%d", $hours, $minutes, $seconds);
     $endtime = isset($seconds) ? $hours * 3600 + $minutes * 60 + $seconds : $hours * 60 + $minutes;
 
-    $sessionTime = $endtime - $strtime;
+    $sessionTime = 0;
+    if($strtime > $endtime)
+        $sessionTime = 24 - $strtime + $endtime;
+    else
+        $sessionTime = $endtime - $strtime;
 
     return $sessionTime;
 }
