@@ -14,6 +14,7 @@
                         <div class="col-md-5 col-sm-12 styledtable">
                             <textarea name="vastaus" class="textarea answer" placeholder="Vastaus"></textarea>
                             <input type="hidden" value="<?= $task->ID_TEHTAVA; ?>" name="tehtavaId">
+                            <input type="hidden" value="<?= $task->KYSELYTYYPPI; ?>" name="tyyppi">
                             <input type="hidden" value="<?= $_GET['sessionid']; ?>" name="sessionId">
                             <input type="hidden" value="<?= $timeAtStart; ?>" name="timeAtStart">
                             <input type="hidden" value="/session?sessionid=<?= $sessionId; ?>" name="seuraavaSivu">

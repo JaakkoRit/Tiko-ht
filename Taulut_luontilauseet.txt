@@ -12,7 +12,7 @@ create table OPISKELIJA (
 	SALASANA varchar(255) not null,
 	unique (ONRO),
 	primary key (ID_KAYTTAJA),
-	foreign key (ID_KAYTTAJA) references KAYTTAJA
+	foreign key (ID_KAYTTAJA) references KAYTTAJA (ID_KAYTTAJA)
 );
 
 create table OPETTAJA (
@@ -22,7 +22,7 @@ create table OPETTAJA (
 	SALASANA varchar(255) not null,
 	unique (ONRO),
 	primary key (ID_KAYTTAJA),
-	foreign key (ID_KAYTTAJA) references KAYTTAJA
+	foreign key (ID_KAYTTAJA) references KAYTTAJA (ID_KAYTTAJA)
 );
 
 create table YLLAPITAJA(
@@ -31,7 +31,7 @@ create table YLLAPITAJA(
 	SALASANA varchar(255) not null,
 	unique (NIMI),
 	primary key (ID_KAYTTAJA),
-	foreign key (ID_KAYTTAJA) references KAYTTAJA
+	foreign key (ID_KAYTTAJA) references KAYTTAJA (ID_KAYTTAJA)
 );
 
 
@@ -43,7 +43,7 @@ create table TEHTAVA (
 	KUVAUS varchar(255),
 	primary key (ID_TEHTAVA),
 	foreign key (ID_KAYTTAJA) references
-	KAYTTAJA,
+	KAYTTAJA (ID_KAYTTAJA),
 	check (KYSELYTYYPPI = 'SELECT' or
 	KYSELYTYYPPI = 'INSERT' or KYSELYTYYPPI =
 	'DELETE' or KYSELYTYYPPI = 'UPDATE')
@@ -52,7 +52,7 @@ create table TEHTAVA (
 create table ESIMVASTAUS (
 	ID_TEHTAVA int not null,
 	VASTAUS varchar(1000),
-	foreign key (ID_TEHTAVA) references TEHTAVA
+	foreign key (ID_TEHTAVA) references TEHTAVA (ID_TEHTAVA)
 );
 
 create table TEHTAVASUORITUS (
@@ -61,8 +61,8 @@ create table TEHTAVASUORITUS (
 	ALKAIKA time,
 	LOPAIKA time,
 	primary key (ID_TEHTAVA, ID_SESSIO),
-	foreign key (ID_TEHTAVA) references TEHTAVA,
-	foreign key (ID_SESSIO) references SESSIO
+	foreign key (ID_TEHTAVA) references TEHTAVA (ID_TEHTAVA),
+	foreign key (ID_SESSIO) references SESSIO (ID_SESSIO)
 );
 
 create table TEHTAVALISTA (
@@ -71,7 +71,7 @@ create table TEHTAVALISTA (
 	KUVAUS varchar(255),
 	LUOMPVM date not null,
 	primary key (ID_TLISTA),
-	foreign key (ID_KAYTTAJA) references KAYTTAJA
+	foreign key (ID_KAYTTAJA) references KAYTTAJA (ID_KAYTTAJA)
 );
 
 create table TEHTAVALISTANTEHTAVA (
@@ -88,11 +88,11 @@ create table SESSIO (
 	LOPAIKA time,
 	primary key (ID_SESSIO),
 	foreign key (ID_KAYTTAJA) references
-	KAYTTAJA,
+	KAYTTAJA (ID_KAYTTAJA),
 	foreign key (ID_TLISTA) references
-	TEHTAVALISTA,
+	TEHTAVALISTA (ID_TLISTA),
 	foreign key (ID_LUOJA) references
-	KAYTTAJA
+	KAYTTAJA (ID_KAYTTAJA)
 );
 
 create table YRITYS (
@@ -105,17 +105,17 @@ create table YRITYS (
 	OLIKOOIKEIN boolean,
 	primary key (ID_TEHTAVA, ID_SESSIO,
 	YRITYSKERTA),
-	foreign key (ID_TEHTAVA) references TEHTAVA,
-	foreign key (ID_SESSIO) references SESSIO,
+	foreign key (ID_TEHTAVA) references TEHTAVA (ID_TEHTAVA),
+	foreign key (ID_SESSIO) references SESSIO (ID_SESSIO),
 	check (YRITYSKERTA between 0 and 2)
 );
 
-INSERT INTO `tiko`.`tehtavalista` (`ID_KAYTTAJA`, `KUVAUS`, `LUOMPVM`) VALUES ('2', 'T‰m‰ on testikuvaus.', '2017-04-18');
-INSERT INTO `tiko`.`tehtava` (`ID_KAYTTAJA`, `LUOMPVM`, `KYSELYTYYPPI`, `KUVAUS`) VALUES ('2', '2017-04-18', 'SELECT', 'Valitse opettajien nimet');
-INSERT INTO `tiko`.`tehtava` (`ID_KAYTTAJA`, `LUOMPVM`, `KYSELYTYYPPI`, `KUVAUS`) VALUES ('2', '2017-04-18', 'SELECT', 'Valitse opettajien nimet');
-INSERT INTO `tiko`.`tehtava` (`ID_KAYTTAJA`, `LUOMPVM`, `KYSELYTYYPPI`, `KUVAUS`) VALUES ('2', '2017-04-18', 'SELECT', 'Valitse opettajien nimet');
-INSERT INTO `tiko`.`tehtava` (`ID_KAYTTAJA`, `LUOMPVM`, `KYSELYTYYPPI`, `KUVAUS`) VALUES ('2', '2017-04-18', 'SELECT', 'Valitse opettajien nimet');
-INSERT INTO `tiko`.`tehtava` (`ID_KAYTTAJA`, `LUOMPVM`, `KYSELYTYYPPI`, `KUVAUS`) VALUES ('2', '2017-04-18', 'SELECT', 'Valitse opettajien nimet');
+INSERT INTO tehtavalista ('ID_TLISTA', 'ID_KAYTTAJA', 'KUVAUS', 'LUOMPVM') VALUES ('1', '2', 'T‰m‰ on testikuvaus.', '2017-04-18');
+INSERT INTO tehtava (`ID_KAYTTAJA`, `LUOMPVM`, `KYSELYTYYPPI`, `KUVAUS`) VALUES ('2', '2017-04-18', 'SELECT', 'Valitse opettajien nimet');
+INSERT INTO tehtava (`ID_KAYTTAJA`, `LUOMPVM`, `KYSELYTYYPPI`, `KUVAUS`) VALUES ('2', '2017-04-18', 'SELECT', 'Valitse opettajien nimet');
+INSERT INTO tehtava (`ID_KAYTTAJA`, `LUOMPVM`, `KYSELYTYYPPI`, `KUVAUS`) VALUES ('2', '2017-04-18', 'SELECT', 'Valitse opettajien nimet');
+INSERT INTO tehtava (`ID_KAYTTAJA`, `LUOMPVM`, `KYSELYTYYPPI`, `KUVAUS`) VALUES ('2', '2017-04-18', 'SELECT', 'Valitse opettajien nimet');
+INSERT INTO tehtava (`ID_KAYTTAJA`, `LUOMPVM`, `KYSELYTYYPPI`, `KUVAUS`) VALUES ('2', '2017-04-18', 'SELECT', 'Valitse opettajien nimet');
 UPDATE `tiko`.`tehtava` SET `KUVAUS`='Valitse opiskelijoiden nimet, joilla p‰‰aineena on \'TKO\'' WHERE  `ID_TEHTAVA`=2;
 UPDATE `tiko`.`tehtava` SET `KUVAUS`='Mitk‰ ovat \'Villen\' suorittamien kurssien arvosanat?' WHERE  `ID_TEHTAVA`=3;
 UPDATE `tiko`.`tehtava` SET `KYSELYTYYPPI`='INSERT', `KUVAUS`='Lis‰‰ opiskelija Matti tietokantaan. Matin opiskelijanumero on 1234 ja p‰‰aine VT' WHERE  `ID_TEHTAVA`=4;
@@ -129,6 +129,16 @@ UPDATE `tiko`.`tehtavalistantehtava` SET `ID_TEHTAVA`='2' WHERE  `ID_TLISTA`=1 A
 UPDATE `tiko`.`tehtavalistantehtava` SET `ID_TEHTAVA`='3' WHERE  `ID_TLISTA`=1 AND `ID_TEHTAVA`=1 LIMIT 1;
 UPDATE `tiko`.`tehtavalistantehtava` SET `ID_TEHTAVA`='4' WHERE  `ID_TLISTA`=1 AND `ID_TEHTAVA`=1 LIMIT 1;
 UPDATE `tiko`.`tehtavalistantehtava` SET `ID_TEHTAVA`='5' WHERE  `ID_TLISTA`=1 AND `ID_TEHTAVA`=1 LIMIT 1;
+
+INSERT INTO sessio ('ID_SESSIO', 'ID_KAYTTAJA', 'ID_TLISTA', 'ID_LUOJA') VALUES(1, 1, 1, 3);
+INSERT INTO sessio ('ID_SESSIO', 'ID_KAYTTAJA', 'ID_TLISTA', 'ID_LUOJA') VALUES(2, 1, 1, 3);
+INSERT INTO sessio ('ID_SESSIO', 'ID_KAYTTAJA', 'ID_TLISTA', 'ID_LUOJA') VALUES(3, 1, 2, 3);
+
+INSERT INTO esimvastaus (1, 'SELECT opettaja FROM kurssit;');
+INSERT INTO esimvastaus (2, 'SELECT nimi FROM opiskelijat WHERE p_aine = 'TKO';');
+INSERT INTO esimvastaus (3, 'SELECT suoritukset.arvosana FROM opiskelijat, suoritukset WHERE opiskelijat.nro = suoritukset.op_nro AND opiskelijat.nimi = 'Ville';');
+INSERT INTO esimvastaus (4, 'INSERT INTO opiskelijat VALUES (1234, 'Matti', 'VT');');
+INSERT INTO esimvastaus (5, 'DELETE FROM opiskelijat WHERE nro = 1234;');
 
 CREATE TABLE esimtaulut.opiskelijat (
 	nro INT,
@@ -158,8 +168,8 @@ CREATE TABLE esimtaulut.suoritukset (
 	op_nro INT NOT NULL,
 	arvosana INT NOT NULL,
 	PRIMARY KEY (k_id, op_nro),
-	FOREIGN KEY(k_id) REFERENCES kurssit,
-	FOREIGN KEY(op_nro) REFERENCES opiskelijat
+	FOREIGN KEY(k_id) REFERENCES kurssit (id),
+	FOREIGN KEY(op_nro) REFERENCES opiskelijat (nro)
 );
 
 INSERT INTO esimtaulut.suoritukset VALUES (1, 1, 5);
@@ -170,3 +180,49 @@ INSERT INTO esimtaulut.suoritukset VALUES (2, 2, 3);
 INSERT INTO esimtaulut.suoritukset VALUES (2, 4, 3);
 INSERT INTO esimtaulut.suoritukset VALUES (3, 1, 5);
 INSERT INTO esimtaulut.suoritukset VALUES (3, 2, 4);
+
+
+
+
+
+
+CREATE TABLE opiskelijat (
+	nro INT,
+	nimi VARCHAR(15) NOT NULL,
+	p_aine VARCHAR(15) NOT NULL,
+	PRIMARY KEY (nro)
+);
+
+INSERT INTO opiskelijat VALUES (1, 'Maija', 'TKO');
+INSERT INTO opiskelijat VALUES (2, 'Ville', 'TKO');
+INSERT INTO opiskelijat VALUES (3, 'Kalle', 'VT');
+INSERT INTO opiskelijat VALUES (4, 'Liisa', 'VT');
+
+CREATE TABLE kurssit (
+	id INT,
+	nimi VARCHAR(15) NOT NULL,
+	opettaja VARCHAR(15) NOT NULL,
+	PRIMARY KEY (id)
+);
+
+INSERT INTO kurssit VALUES (1, 'tkp', 'KI');
+INSERT INTO kurssit VALUES (2, 'oope', 'JL');
+INSERT INTO kurssit VALUES (3, 'tiko', 'MJ');
+
+CREATE TABLE suoritukset (
+	k_id INT,
+	op_nro INT NOT NULL,
+	arvosana INT NOT NULL,
+	PRIMARY KEY (k_id, op_nro),
+	FOREIGN KEY(k_id) REFERENCES kurssit (id),
+	FOREIGN KEY(op_nro) REFERENCES opiskelijat (nro)
+);
+
+INSERT INTO suoritukset VALUES (1, 1, 5);
+INSERT INTO suoritukset VALUES (1, 2, 4);
+INSERT INTO suoritukset VALUES (1, 3, 2);
+INSERT INTO suoritukset VALUES (2, 1, 5);
+INSERT INTO suoritukset VALUES (2, 2, 3);
+INSERT INTO suoritukset VALUES (2, 4, 3);
+INSERT INTO suoritukset VALUES (3, 1, 5);
+INSERT INTO suoritukset VALUES (3, 2, 4);

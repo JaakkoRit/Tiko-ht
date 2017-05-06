@@ -58,26 +58,32 @@ function correctAnswer($answer, $answerArray)
     return in_array($answer, $answerArray);
 }
 
-function createAttempt($req, $answer, $correct)
-{
+function countAttempts($taskId, $sessionId) {
     $attempts = Attempt::findAllAttempts(
         'ID_TEHTAVA',
-        $req->get('tehtavaId'),
+        $taskId,
         'ID_SESSIO',
-        $req->get('sessionId')
+        $sessionId
     );
+
+    return count($attempts);
+}
+
+function createAttempt($req, $answer, $correct)
+{
+    $attempts = countAttempts($req->get('tehtavaId'), $req->get('sessionId'));
 
     Attempt::create([
         'ID_TEHTAVA' => $req->get('tehtavaId'),
         'ID_SESSIO' => $req->get('sessionId'),
-        'YRITYSKERTA' => count($attempts)+1,
+        'YRITYSKERTA' => $attempts+1,
         'VASTAUS' => $answer,
         'ALKAIKA' => $req->get('timeAtStart'),
         'LOPAIKA' => date("Y-m-d H:i:s"),
         'OLIKOOIKEIN' => $correct
     ]);
 
-    return count($attempts);
+    return $attempts;
 }
 
 function updateTaskCompletion($req) {
@@ -89,7 +95,7 @@ function updateTaskCompletion($req) {
 }
 
 function getQueryResult(){
-    $queryResult = [];
+    $queryResult = null;
 
     if(isset($_SESSION['queryResult'])){
         $queryResult = $_SESSION['queryResult'];
@@ -99,7 +105,7 @@ function getQueryResult(){
 }
 
 function getCorrectTable(){
-    $correctTable = [];
+    $correctTable = null;
 
     if(isset($_SESSION['correctTable'])){
         $correctTable = $_SESSION['correctTable'];

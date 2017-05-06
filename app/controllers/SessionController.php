@@ -41,10 +41,25 @@ class SessionController
         $students = arrayToHtml('opiskelijat');
         $courseCompletion = arrayToHtml('suoritukset');
         $errors = getErrors();
-        $queryResult = queryToHtml(getQueryResult());
-        $correctTable = queryToHtml(getCorrectTable());
+        $queryResult = null;
+        $correctTable = null;
 
-        if (!anyTasksLeft($index, $tasks, $session)) {
+
+        if (isset($_SESSION['queryResult']) &&
+            $_SESSION['queryResult'] != 1 && $_SESSION['queryResult'] != 0) {
+            $queryResult = queryToHtml(getQueryResult());
+        } else {
+            $queryResult = getQueryResult();
+        }
+
+        if (isset($_SESSION['correctTable']) &&
+            $_SESSION['correctTable'] != 1 && $_SESSION['correctTable'] != 0) {
+            $correctTable = queryToHtml(getCorrectTable());
+        } else {
+            $correctTable = getCorrectTable();
+        }
+
+        if ($task == null) {
             $completed = true;
             Query::dropSchema($sessionId);
             return view('session', compact('completed', 'courses', 'students',
@@ -69,6 +84,7 @@ class SessionController
         $req = App::get('request');
         $previousPage = $req->headers->get('referer');
         $nextPage = $req->get('seuraavaSivu');
+        $tyyppi = $req->get('tyyppi');
 
         $errors = (new Validator([
             'vastaus' => 'required'
@@ -89,7 +105,11 @@ class SessionController
 
         $db->beginTransaction();
         try {
-            $result = Query::rawQuery($lowerCaseAnswer);
+            if ($tyyppi == 'DELETE' || $tyyppi == 'INSERT') {
+                $result = Query::rawQueryExecute($lowerCaseAnswer);
+            } else {
+                $result = Query::rawQuery($lowerCaseAnswer);
+            }
             $_SESSION['queryResult'] = $result;
         } catch (\Exception $e) {
             $_SESSION['errors'] = $e->getMessage();
@@ -98,14 +118,23 @@ class SessionController
 
         $db->beginTransaction();
         foreach ($lowerCaseAnswersArray as $row) {
-            $correctTable = Query::rawQuery($row);
+            if ($tyyppi == 'DELETE' || $tyyppi == 'INSERT') {
+                $correctTable = Query::rawQueryExecute($row);
+            } else {
+                $correctTable = Query::rawQuery($row);
+            }
             $_SESSION['correctTable'] = $correctTable;
             if ($result == $correctTable) {
                 $correct = true;
                 $db->commit();
                 break;
             } else {
-                $db->rollback();
+                Query::setSearchPathTo('tiko');
+                if (countAttempts($req->get('tehtavaId'), $req->get('sessionId')) >= 2) {
+                    $db->commit();
+                } else {
+                    $db->rollback();
+                }
             }
         }
 

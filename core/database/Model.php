@@ -32,6 +32,12 @@ abstract class Model
             ->getAll(get_called_class());
     }
 
+    public static function rawQueryExecute($query) {
+        return App::get('database')
+            ->query($query)
+            ->execute();
+    }
+
 	public static function all($fields = [])
 	{
 		$selectFields = '*';
@@ -320,8 +326,8 @@ abstract class Model
                 . "op_nro INT NOT NULL,"
                 . "arvosana INT NOT NULL,"
                 . "PRIMARY KEY (k_id, op_nro),"
-                . "FOREIGN KEY(k_id) REFERENCES kurssit,"
-                . "FOREIGN KEY(op_nro) REFERENCES opiskelijat)")
+                . "FOREIGN KEY(k_id) REFERENCES kurssit (id),"
+                . "FOREIGN KEY(op_nro) REFERENCES opiskelijat (nro))")
             ->execute();
     }
 
