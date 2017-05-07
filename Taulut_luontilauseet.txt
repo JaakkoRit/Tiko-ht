@@ -110,15 +110,15 @@ create table YRITYS (
 	check (YRITYSKERTA between 0 and 2)
 );
 
-INSERT INTO tehtavalista ('ID_TLISTA', 'ID_KAYTTAJA', 'KUVAUS', 'LUOMPVM') VALUES ('1', '2', 'T‰m‰ on testikuvaus.', '2017-04-18');
+INSERT INTO tehtavalista ('ID_TLISTA', 'ID_KAYTTAJA', 'KUVAUS', 'LUOMPVM') VALUES ('1', '2', 'T√§m√§ on testikuvaus.', '2017-04-18');
 INSERT INTO tehtava (`ID_KAYTTAJA`, `LUOMPVM`, `KYSELYTYYPPI`, `KUVAUS`) VALUES ('2', '2017-04-18', 'SELECT', 'Valitse opettajien nimet');
 INSERT INTO tehtava (`ID_KAYTTAJA`, `LUOMPVM`, `KYSELYTYYPPI`, `KUVAUS`) VALUES ('2', '2017-04-18', 'SELECT', 'Valitse opettajien nimet');
 INSERT INTO tehtava (`ID_KAYTTAJA`, `LUOMPVM`, `KYSELYTYYPPI`, `KUVAUS`) VALUES ('2', '2017-04-18', 'SELECT', 'Valitse opettajien nimet');
 INSERT INTO tehtava (`ID_KAYTTAJA`, `LUOMPVM`, `KYSELYTYYPPI`, `KUVAUS`) VALUES ('2', '2017-04-18', 'SELECT', 'Valitse opettajien nimet');
 INSERT INTO tehtava (`ID_KAYTTAJA`, `LUOMPVM`, `KYSELYTYYPPI`, `KUVAUS`) VALUES ('2', '2017-04-18', 'SELECT', 'Valitse opettajien nimet');
-UPDATE `tiko`.`tehtava` SET `KUVAUS`='Valitse opiskelijoiden nimet, joilla p‰‰aineena on \'TKO\'' WHERE  `ID_TEHTAVA`=2;
-UPDATE `tiko`.`tehtava` SET `KUVAUS`='Mitk‰ ovat \'Villen\' suorittamien kurssien arvosanat?' WHERE  `ID_TEHTAVA`=3;
-UPDATE `tiko`.`tehtava` SET `KYSELYTYYPPI`='INSERT', `KUVAUS`='Lis‰‰ opiskelija Matti tietokantaan. Matin opiskelijanumero on 1234 ja p‰‰aine VT' WHERE  `ID_TEHTAVA`=4;
+UPDATE `tiko`.`tehtava` SET `KUVAUS`='Valitse opiskelijoiden nimet, joilla p√§√§aineena on \'TKO\'' WHERE  `ID_TEHTAVA`=2;
+UPDATE `tiko`.`tehtava` SET `KUVAUS`='Mitk√§ ovat \'Villen\' suorittamien kurssien arvosanat?' WHERE  `ID_TEHTAVA`=3;
+UPDATE `tiko`.`tehtava` SET `KYSELYTYYPPI`='INSERT', `KUVAUS`='Lis√§√§ opiskelija Matti tietokantaan. Matin opiskelijanumero on 1234 ja p√§√§aine VT' WHERE  `ID_TEHTAVA`=4;
 UPDATE `tiko`.`tehtava` SET `KYSELYTYYPPI`='DELETE', `KUVAUS`='Poista opiskelija, jonka numero on 1234' WHERE  `ID_TEHTAVA`=5;
 INSERT INTO `tiko`.`tehtavalistantehtava` (`ID_TLISTA`, `ID_TEHTAVA`) VALUES ('1', '1');
 INSERT INTO `tiko`.`tehtavalistantehtava` (`ID_TLISTA`, `ID_TEHTAVA`) VALUES ('1', '1');

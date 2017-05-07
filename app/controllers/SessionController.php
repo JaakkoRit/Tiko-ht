@@ -37,13 +37,12 @@ class SessionController
             }
         }
 
-        $courses = arrayToHtml('kurssit');
-        $students = arrayToHtml('opiskelijat');
-        $courseCompletion = arrayToHtml('suoritukset');
         $errors = getErrors();
         $queryResult = null;
         $correctTable = null;
-
+        $courses = tableToHtml('kurssit');
+        $students = tableToHtml('opiskelijat');
+        $courseCompletion = tableToHtml('suoritukset');
 
         if (isset($_SESSION['queryResult']) &&
             $_SESSION['queryResult'] != 1 && $_SESSION['queryResult'] != 0) {

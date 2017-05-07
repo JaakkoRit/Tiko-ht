@@ -1,14 +1,10 @@
 <?php if (isset($errors) && count($errors) > 0) : ?>
-
-    <hr>
-
-    <div class="notification is-danger">
-        <ul>
+	<div class="row alert alert-warning nomargin text-center">
+		<div class="col-sm-12">
             <?php foreach ($errors as $error) : ?>
-                <li><?php echo $error; ?></li>
+					<p><b><?php echo $error; ?></b></p>
             <?php endforeach; ?>
-        </ul>
-    </div>
-
+		</div>
+	</div>
 <?php endif; ?>
 
