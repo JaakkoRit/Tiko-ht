@@ -35,9 +35,10 @@ class TeacherController
     {
         $req = App::get('request');
         $teacher = Teacher::findWhere('ONRO', $req->get('onro'));
-        $user = User::find($teacher->ID_KAYTTAJA);
 
         if ($teacher && password_verify($req->get('salasana'), $teacher->SALASANA)) {
+            $user = User::find($teacher->ID_KAYTTAJA);
+
             $_SESSION['id_kayttaja'] = $teacher->ID_KAYTTAJA;
             $_SESSION['nimi'] = $teacher->NIMI;
             $_SESSION['onro'] = $teacher->ONRO;
@@ -46,6 +47,6 @@ class TeacherController
             header('Location: /teacher-home');
         }
 
-        return view('login', ['message' => 'Opettajanumero tai salasana väärin.']);
+        header('Location: / ');
     }
 }

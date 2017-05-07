@@ -28,16 +28,17 @@ class AdminController
     {
         $req = App::get('request');
         $admin = Admin::findWhere('NIMI', $req->get('nimi'));
-        $user = User::find($admin->ID_KAYTTAJA);
 
         if ($admin && password_verify($req->get('salasana'), $admin->SALASANA)) {
+            $user = User::find($admin->ID_KAYTTAJA);
             $_SESSION['id_kayttaja'] = $admin->ID_KAYTTAJA;
             $_SESSION['nimi'] = $admin->NIMI;
             $_SESSION['rooli'] = $user->ROOLI;
 
             header('Location: /admin-home');
+            die();
         }
 
-        return view('login', ['message' => 'Nimi tai salasana väärin.']);
+        header('Location: /');
     }
 }
