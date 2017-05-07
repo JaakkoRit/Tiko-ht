@@ -94,9 +94,16 @@ abstract class Model
     }
 
     public static function findTasksSortedByQueryType()
+{
+    return App::get('database')
+        ->query("SELECT * FROM tehtava ORDER BY kyselytyyppi DESC")
+        ->getAll(get_called_class());
+}
+
+    public static function findStudentsSortedByMajor()
     {
         return App::get('database')
-            ->query("SELECT * FROM tehtava ORDER BY kyselytyyppi DESC")
+            ->query("SELECT * FROM opiskelija ORDER BY paaaine DESC")
             ->getAll(get_called_class());
     }
 

@@ -400,13 +400,13 @@ function getTaskQueryReport(){
     $tasksQuery = Task::findTasksSortedByQueryType();
     if(sizeof($tasksQuery) != 0){
         $taskReportArray = array();
-        $taskReport = array();
+        $taskReport = array(null, null, null);
         $tasksByType = array();
         $tasksByType[0][0] = $tasksQuery[0];
         if(sizeof($tasksQuery) > 1){
             $count = 0;
             $count2 = 0;
-            for($i = 1; $i<sizeof($tasksQuery) - 1; $i++){
+            for($i = 1; $i<sizeof($tasksQuery); $i++){
                 if($tasksQuery[$i]->KYSELYTYYPPI == $tasksQuery[$i - 1]->KYSELYTYYPPI)
                     $count2++;
                 else{
@@ -419,29 +419,24 @@ function getTaskQueryReport(){
         $arrayIndex = 0;
         foreach($tasksByType as $tasks){
             $taskCompletions = array();
-            for($i = 0; $i < sizeof($tasks) - 1; $i++){
+            for($i = 0; $i < sizeof($tasks); $i++){
                 $tempArray = TaskCompletion::findAllCompletedTaskCompletions("ID_TEHTAVA", $tasks[$i]->ID_TEHTAVA, "LOPAIKA");
-                foreach($tempArray as $temp){
+                foreach($tempArray as $temp)
                     array_push($taskCompletions, $temp);
-                }
             }
             if(sizeof($taskCompletions) != 0){
                 $sum = 0;
                 $count = 0;
-                $allAttempts = 0;
+                $attempts = 0;
                 foreach($taskCompletions as $taskCompletion){
-                    $attempts = Attempt::findAllWhere("ID_SESSIO", $taskCompletion->ID_SESSIO);
+                    $tempArray = Attempt::findAllAttempts("ID_SESSIO", $taskCompletion->ID_SESSIO, "ID_TEHTAVA", $taskCompletion->ID_TEHTAVA);
+                    foreach($tempArray as $temp)
+                        $attempts++;
                     $sum = $sum + getSessionTime($taskCompletion->ALKAIKA, $taskCompletion->LOPAIKA);
-                    $allAttempts = $allAttempts + sizeof($attempts);
                     $count++;
                 }
-
-                $avgtime = gmdate("H:i:s", $sum / $count);
-                $avgAttempts = number_format((float)$allAttempts / $count, 1, '.', '');
-
-
-                $taskReport[1] = $avgAttempts;
-                $taskReport[2] = $avgtime;
+                $taskReport[1] = number_format((float) $attempts / $count, 1, '.', '');
+                $taskReport[2] = gmdate("H:i:s", $sum / $count);
             }
             else {
                 $taskReport[1] = 0;
@@ -449,24 +444,63 @@ function getTaskQueryReport(){
             }
             $taskReport[0] = $tasks[0]->KYSELYTYYPPI;
             $taskReportArray[$arrayIndex] = $taskReport;
+            $arrayIndex++;
         }
         return reportToHtml($taskReportArray, array("Tyyppi", "Yritysten keskimäärä", "Tehtäviin keskimäärin käytetty aika"), "Tehtävien kyselytyypeittäinen raportti");
     }
     else
         return "Ei raportoitavia tehtäviä";
-
-    /*$count = 0;
-    foreach($tasks as $task){
-        $attempts = Attempt::findAllWhere("ID_TEHTAVA", $task->ID_TEHTAVA);
-        $taskReportArray[$count][0] = $task->ID_TEHTAVA;
-        $taskReportArray[$count][1] = $task->KYSELYTYYPPI;
-        $taskReportArray[$count][2] = gmdate("H:i:s", getMeanTime($attempts));
-        $taskReportArray[$count][3] = getMeanAttempts($task);
-    }*/
 }
-
 function getTaskSuccess(){
-
+    $studentsQuery = Student::findStudentsSortedByMajor();
+    $tasksCompletionQuery = array();
+    foreach($studentsQuery as $student){
+        $sessions = Session::findAllWhere("ID_KAYTTAJA", $student->ID_KAYTTAJA);
+        foreach($sessions as $session){
+            $tempArray = TaskCompletion::findAllCompletedTaskCompletions("ID_SESSIO", $session->ID_SESSIO, "LOPAIKA");
+            foreach($tempArray as $temp)
+                array_push($tasksCompletionQuery, $temp);
+        }
+    }
+    if(sizeof($tasksCompletionQuery) != 0){
+        $taskCompletionsByMajor = array();
+        $taskCompletionsByMajor[0][0] = $tasksCompletionQuery[0];
+        if(sizeof($tasksCompletionQuery) > 1){
+            $count = 0;
+            $count2 = 0;
+            for($i = 1; $i < sizeof($tasksCompletionQuery); $i++){
+                $student = Student::findWhere("ID_KAYTTAJA", Session::findWhere("ID_SESSIO", $tasksCompletionQuery[$i]->ID_SESSIO)->ID_KAYTTAJA);
+                $lastStudent = Student::findWhere("ID_KAYTTAJA", Session::findWhere("ID_SESSIO", $tasksCompletionQuery[$i - 1]->ID_SESSIO)->ID_KAYTTAJA);
+                if($student->PAAAINE == $lastStudent->PAAAINE){
+                    $count2++;
+                }
+                else{
+                    $count++;
+                    $count2 = 0;
+                }
+                $taskCompletionsByMajor[$count][$i] = $tasksCompletionQuery[$i];
+            }
+        }
+        $arrayIndex = 0;
+        foreach($taskCompletionsByMajor as $taskCompletions){
+            $attemptcount = 0;
+            $sum = 0;
+            foreach($taskCompletions as $taskCompletion){
+                $tempArray = Attempt::findAllAttempts("ID_SESSIO", $taskCompletion->ID_SESSIO, "ID_TEHTAVA", $taskCompletion->ID_TEHTAVA);
+                foreach($tempArray as $temp)
+                    $attemptcount++;
+                $sum = $sum + getSessionTime($taskCompletion->ALKAIKA, $taskCompletion->LOPAIKA);
+            }
+            $taskReport[0] = Student::findWhere("ID_KAYTTAJA" ,Session::findWhere("ID_SESSIO", $taskCompletion->ID_SESSIO)->ID_KAYTTAJA)->PAAAINE;
+            $taskReport[1] = number_format((float) $attemptcount / sizeof($taskCompletions), 1, '.', '');
+            $taskReport[2] = gmdate("H:i:s", $sum / sizeof($taskCompletions));
+            $taskReportArray[$arrayIndex] = $taskReport;
+            $arrayIndex++;
+        }
+        return reportToHtml($taskReportArray, array("Pääaine", "Yritysten keskimäärä", "Tehtäviin keskimäärin käytetty aika"), "Tehtävissä onnistumisen raportti pääaineittain");
+    }
+    else
+        return "Ei raportoitavia tehtäviä";
 }
 
 function getRightAttemptCount($attemptArray){

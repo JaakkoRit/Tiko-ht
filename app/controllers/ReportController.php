@@ -16,11 +16,9 @@ class ReportController
     public function showSessionRaport(){
         $tasklistArray = TaskList::all();
         $report = null;
-
         foreach ($tasklistArray as $tasklist) {
             $report .= getSessionReport($tasklist);
         }
-
         return view('session-report', compact('report'));
     }
 
@@ -31,12 +29,10 @@ class ReportController
         foreach ($tasklistArray as $tasklist) {
             $report .= getTaskListSessionReport($sessionArray, $tasklist);
         }
-
         return view('tasklistsession-report', compact('report'));
     }
     public function showTaskListTaskReport(){
         $tasklistArray = TaskList::all();
-
         $report = null;
         foreach ($tasklistArray as $tasklist) {
             $report .= getTaskReport($tasklist);
@@ -45,7 +41,6 @@ class ReportController
     }
     public function showTaskDifficultyReport(){
         $tasklistArray = TaskList::all();
-
         $report = null;
         foreach ($tasklistArray as $tasklist) {
             $report .= getTaskDifficultyReport($tasklist);
@@ -53,12 +48,10 @@ class ReportController
         return view('taskdifficulty-report', compact('report'));
     }
     public function showTaskQueryReport(){
-
         $report = getTaskQueryReport();
         return view('taskquery-report', compact('report'));
     }
     public function showTaskSuccessReport(){
-
         $report = getTaskSuccess();
         return view('tasksuccess-report', compact('report'));
     }
