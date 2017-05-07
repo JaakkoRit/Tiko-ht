@@ -44,9 +44,6 @@ class SessionController
         $correctAnswer = getCorrectAnswer();
         $correct = getCorrect();
         $syntaxErrors = getSyntaxErrors();
-        $courses = tableToHtml('kurssit');
-        $students = tableToHtml('opiskelijat');
-        $courseCompletion = tableToHtml('suoritukset');
 
         if (isset($_SESSION['queryResult']) &&
             $_SESSION['queryResult'] != 1 && $_SESSION['queryResult'] != 0) {
@@ -62,14 +59,6 @@ class SessionController
             $correctTable = getCorrectTable();
         }
 
-        if ($task == null) {
-            $completed = true;
-            Query::dropSchema($sessionId);
-            setSessionTimeOfEnding($session);
-            return view('session', compact('completed', 'courses', 'students',
-                'courseCompletion', 'errors', 'queryResult', 'correctTable', 'correctAnswer', 'correct', 'syntaxErrors', 'sqlError'));
-        }
-
         $timeAtStart = date("Y-m-d H:i:s");
 
         if (startOfSession($session)) {
@@ -78,6 +67,19 @@ class SessionController
         }
 
         createTaskCompletion($sessionId, $tasks, $index, $timeAtStart);
+
+        $courses = tableToHtml("esimtaulut$sessionId.kurssit");
+        $students = tableToHtml("esimtaulut$sessionId.opiskelijat");
+        $courseCompletion = tableToHtml("esimtaulut$sessionId.suoritukset");
+
+        if ($task == null) {
+            $completed = true;
+            Query::dropSchema($sessionId);
+            setSessionTimeOfEnding($session);
+            return view('session', compact('completed', 'courses', 'students',
+                'courseCompletion', 'errors', 'queryResult', 'correctTable', 'correctAnswer', 'correct', 'syntaxErrors', 'sqlError'));
+        }
+
 
         return view('session', compact('task', 'sessionId', 'timeAtStart', 'courses', 'students',
             'courseCompletion', 'queryResult', 'errors', 'correctTable', 'correctAnswer', 'correct', 'syntaxErrors', 'sqlError'));

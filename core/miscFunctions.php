@@ -145,8 +145,9 @@ function getCorrect() {
 
 function tableToHtml($tableName){
     $table = Query::rawQuery(Session::selectFrom($tableName, '*'));
-    $columnNames = Query::rawQuery(Session::selectColumnNames($tableName));
-    $tableHtml = "<table style=\"width:100%\"><caption>$tableName</caption><tr>";
+    $tableName = explode('.', $tableName);
+    $columnNames = Query::rawQuery(Session::selectColumnNames($tableName[1], $tableName[0]));
+    $tableHtml = "<table style=\"width:100%\"><caption>$tableName[1]</caption><tr>";
     foreach ($columnNames as $row) {
         foreach ($row as $index)
             $tableHtml .= "<th>" . $index . "</th>";

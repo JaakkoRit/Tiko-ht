@@ -84,17 +84,17 @@ require "_basicsidebar.view.php";
         </div>
         <div class="row">
             <div class="col-md-5 col-sm-12 styledtable">
-                <?php echo $courses; ?>
+                <?= $courses; ?>
             </div>
         </div>
         <div class="row">
             <div class="col-md-5 col-sm-12 styledtable">
-                <?php echo $students; ?>
+                <?= $students; ?>
             </div>
         </div>
         <div class="row">
             <div class="col-md-5 col-sm-12 styledtable">
-                <?php echo $courseCompletion; ?>
+                <?= $courseCompletion; ?>
             </div>
         </div>
     </div>
