@@ -13,27 +13,26 @@
 	</div>
 	<div class="row">
 		<div class="col-md-6">
-		<ul class="list-group">
-			<?php foreach ($tasks as $task) : ?>
-			<div class="row">
-				<div class="col-sm-12 nopadding">
-					<li class="list-group-item">
-						<?= $task->KUVAUS; ?>	
-					</li>
-					<form action="delete-taskfromtasklist?id=<?= $id; ?>" method="post">			
-						<?php if ($task->ID_KAYTTAJA == auth()->ID_KAYTTAJA || \App\App\Models\Gate::hasRole('admin')) : ?>
-							<a href="/tasks/edit?id=<?= $task->ID_TEHTAVA; ?>" class="btn btn-sm btn-primary">Muokkaa</a>
-						<?php endif; ?>
-						<input type="hidden" name="tehtavaId" value="<?= $task->ID_TEHTAVA; ?>">
-						<input type="hidden" name="tlistaId" value="<?= $id; ?>">
-						<button type="submit" class="btn btn-sm btn-danger pull-right">Poista</button>
-					</form>
-				</div>
-			</div>
-			<br>
-			<?php endforeach; ?>
-		</ul>
-
+            <ul class="list-group">
+                <?php foreach ($tasks as $task) : ?>
+                <div class="row">
+                    <div class="col-sm-12 nopadding">
+                        <li class="list-group-item">
+                            <?= $task->KUVAUS; ?>
+                        </li>
+                        <form action="delete-taskfromtasklist?id=<?= $id; ?>" method="post">
+                            <?php if ($task->ID_KAYTTAJA == auth()->ID_KAYTTAJA || \App\App\Models\Gate::hasRole('admin')) : ?>
+                                <a href="/tasks/edit?id=<?= $task->ID_TEHTAVA; ?>" class="btn btn-sm btn-primary">Muokkaa</a>
+                            <?php endif; ?>
+                            <input type="hidden" name="tehtavaId" value="<?= $task->ID_TEHTAVA; ?>">
+                            <input type="hidden" name="tlistaId" value="<?= $id; ?>">
+                            <button type="submit" class="btn btn-sm btn-danger pull-right">Poista</button>
+                        </form>
+                    </div>
+                </div>
+                <br>
+                <?php endforeach; ?>
+            </ul>
 		</div>
 	</div>
 	<div class="row">

@@ -14,29 +14,25 @@ class ReportController
     }
 
     public function showSessionRaport(){
-        $tasklistArray = TaskList::findAllWhere("ID_KAYTTAJA", $_SESSION['id_kayttaja']);
+        $tasklistArray = TaskList::all();
         $report = null;
-
         foreach ($tasklistArray as $tasklist) {
             $report .= getSessionReport($tasklist);
         }
-
         return view('session-report', compact('report'));
     }
 
     public function showTaskListSessionReport(){
-        $tasklistArray = TaskList::findAllWhere("ID_KAYTTAJA", $_SESSION['id_kayttaja']);
+        $tasklistArray = TaskList::all();
         $sessionArray = Session::all();
         $report = null;
         foreach ($tasklistArray as $tasklist) {
             $report .= getTaskListSessionReport($sessionArray, $tasklist);
         }
-
         return view('tasklistsession-report', compact('report'));
     }
     public function showTaskListTaskReport(){
-        $tasklistArray = TaskList::findAllWhere("ID_KAYTTAJA", $_SESSION['id_kayttaja']);
-
+        $tasklistArray = TaskList::all();
         $report = null;
         foreach ($tasklistArray as $tasklist) {
             $report .= getTaskReport($tasklist);
@@ -44,12 +40,19 @@ class ReportController
         return view('tasklisttask-report', compact('report'));
     }
     public function showTaskDifficultyReport(){
-        $tasklistArray = TaskList::findAllWhere("ID_KAYTTAJA", $_SESSION['id_kayttaja']);
-
+        $tasklistArray = TaskList::all();
         $report = null;
         foreach ($tasklistArray as $tasklist) {
             $report .= getTaskDifficultyReport($tasklist);
         }
         return view('taskdifficulty-report', compact('report'));
+    }
+    public function showTaskQueryReport(){
+        $report = getTaskQueryReport();
+        return view('taskquery-report', compact('report'));
+    }
+    public function showTaskSuccessReport(){
+        $report = getTaskSuccess();
+        return view('tasksuccess-report', compact('report'));
     }
 }

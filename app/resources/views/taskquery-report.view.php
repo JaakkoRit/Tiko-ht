@@ -1,17 +1,17 @@
 <?php
-    require "_header.view.php";
-    require "_navbar.view.php";
-    require "_sidebar.view.php";
+require "_header.view.php";
+require "_navbar.view.php";
+require "_sidebar.view.php";
 ?>
 
     <div class="container page-content">
         <?php require 'message.view.php';?>
         <div class="row">
-            <h2>Sessioiden suoritusajat</h2>
+            <h2>Tehtävissä onnistuminen kyselytyypeittäin</h2>
         </div>
         <div class="row">
             <?= $report;?>
         </div>
     </div>
 <?php
-    require "_footer.view.php";
+require "_footer.view.php";

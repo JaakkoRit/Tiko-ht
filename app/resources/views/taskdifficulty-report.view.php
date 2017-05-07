@@ -7,6 +7,9 @@
     <div class="container page-content">
         <?php require 'message.view.php';?>
         <div class="row">
+            <h2>Tehtävät vaikeusjärjestyksessä</h2>
+        </div>
+        <div class="row">
             <?= $report;?>
         </div>
     </div>
