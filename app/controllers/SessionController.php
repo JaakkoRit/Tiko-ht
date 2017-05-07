@@ -66,7 +66,9 @@ class SessionController
             createExampleTables($session->ID_SESSIO);
         }
 
-        createTaskCompletion($sessionId, $tasks, $index, $timeAtStart);
+        if ($task != null) {
+            createTaskCompletion($sessionId, $tasks, $index, $timeAtStart);
+        }
 
         $courses = tableToHtml("esimtaulut$sessionId.kurssit");
         $students = tableToHtml("esimtaulut$sessionId.opiskelijat");
@@ -115,6 +117,7 @@ class SessionController
         $correct = false;
 
         Query::setSearchPathTo('esimtaulut' . $req->get('sessionId'));
+
 
         $db->beginTransaction();
         try {
