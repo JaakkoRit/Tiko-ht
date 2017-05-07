@@ -27,7 +27,7 @@ require "_basicsidebar.view.php";
             </div>
         <?php else : ?>
             <div class="row">
-                <a href="<?= getHomePage(); ?>" class="btn btn-lg is-primary btn-primary">Etusivulle</a>
+                <a href="<?= getHomePage(); ?>" class="btn btn-lg is-primary btn-primary" style="margin-top: 10px;">Etusivulle</a>
             </div>
         <?php endif; ?>
         <div class="row">
