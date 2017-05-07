@@ -45,6 +45,10 @@ class DevController
             return view('student-registration', compact('errors'));
         }
 
+        if (Student::findWhere('ONRO', $req->get('onro'))) {
+            return view('student-registration');
+        }
+
         // Jos virheilmoituksia ei ollut, jatketaan matkaa.
         // Luodaan uusi käyttäjä, ja asetetaan sen rooliksi 'opiskelija.'
         // Uuden käyttäjän 'ID_KAYTTAJA'-sarake kasvattaa itseään automaattisesti,
@@ -101,6 +105,10 @@ class DevController
             return view('teacher-registration', compact('errors'));
         }
 
+        if (Teacher::findWhere('ONRO', $req->get('onro'))) {
+            return view('teacher-registration');
+        }
+
         $userId = User::create([
             'ROOLI' => 'opettaja'
         ]);
@@ -129,6 +137,9 @@ class DevController
         ]))->validate();
         if(count($errors) > 0){
             return view('admin-registration', compact('errors'));
+        }
+        if (Admin::findWhere('nimi', $req->get('nimi'))) {
+            return view('admin-registration');
         }
         $userId = User::create([
             'ROOLI' => 'admin'
