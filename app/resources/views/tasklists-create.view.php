@@ -1,27 +1,50 @@
-<?php require "_header.view.php"; ?>
-
-    <h1>Luo uusi tehtävälista</h1>
-    <hr>
+<?php
+    require "_header.view.php";
+    require "_navbar.view.php";
+    require "_sidebar.view.php";
+?>
+<div class="container page-content">
+    <?php
+        require 'message.view.php';
+        require 'errors.view.php';
+    ?>
+    <div class="row">
+        <h2>Luo uusi tehtävälista</h2>
+        <hr>
+    </div>
     <form action="/tasklists/save" method="POST">
-
-        <label class="label">Tehtävälistan kuvaus</label>
-        <input class="input" name="kuvaus" type="text">
-
-        <label class="label">Tehtävät</label>
-        <input class="input" name="tehtavat" type="text" placeholder="Kirjoita tehtävien numerot tyyliin: 1 4 15 20...">
-
-        <button type="submit" class="button is-primary">Tallenna</button>
-
+        <div class="row">
+            <div class="col-md-5 col-sm-12 nopadding">
+                <p>Tehtävälistan kuvaus</p>
+                <input class="input full-width" name="kuvaus" type="text">
+            </div>
+            <div class="col-md-1 col-sm-12 nopadding">
+            </div>
+            <div class="col-md-5 col-sm-12 nopadding">
+                <p>Tehtävät</p>
+                <input class="input full-width" name="tehtavat" type="text" placeholder="Kirjoita tehtävien numerot tyyliin: 1 4 15 20...">
+            </div>
+        </div>
+        <div class="row">
+            <br>
+            <button type="submit" class="btn btn-med btn-primary">Tallenna</button>
+        </div>
     </form>
-    <hr>
-    <h2>Tehtävät</h2>
-    <hr>
-    <ul>
-        <?php foreach ($tasks as $task) : ?>
-            <li><?= "$task->ID_TEHTAVA: $task->KUVAUS"; ?></li>
-        <?php endforeach; ?>
-    </ul>
-
+    <div class="row">
+        <hr>
+        <h3>Tehtävät</h3>
+        <hr>
+    </div>
+    <div class="row">
+        <ul class="list-group">
+            <?php foreach ($tasks as $task) : ?>
+            <div class="col-lg-4 col-md-6 col-sm-12 nopadding">
+                <li class="list-group-item"><?= "$task->ID_TEHTAVA: $task->KUVAUS"; ?></li>
+            </div>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</div>
 <?php
     require 'message.view.php';
     require 'errors.view.php';

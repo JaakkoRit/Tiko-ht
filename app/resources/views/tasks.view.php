@@ -8,7 +8,7 @@ require "_sidebar.view.php";
         require 'message.view.php';
         ?>
         <div class="row">
-            <h1>Kaikki tehtävät</h1>
+            <h2>Kaikki tehtävät</h2>
 
             <hr>
         </div>

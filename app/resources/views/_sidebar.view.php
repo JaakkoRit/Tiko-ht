@@ -15,7 +15,7 @@
 
             <li><a href="/tasks">Tehtävät</a></li>
             <li><a href="/tasklists">Tehtävälistat</a></li>
-            <li><a href="/sessions-management">Sessioiden<br>hallinta***</a></li>
+            <li><a href="/sessions-management">Sessioiden<br>hallinta</a></li>
 
             <li><a href="/students">Oppilaat</a></li>
             <?php if (! urlMatches('/-home$/')) : ?>

@@ -5,7 +5,9 @@
     <a class="navbar-link"href="/logout">Kirjaudu ulos</a>
     <hr>
     <ul class="nav navbar-nav">
-
+        <?php if (! urlMatches('/-home$/')) : ?>
+            <li><a href="/student-home" class="button">Takaisin<br>etusivulle</a> </li>
+        <?php endif; ?>
     </ul>
 </nav>
 

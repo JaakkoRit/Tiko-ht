@@ -7,6 +7,9 @@ require "_sidebar.view.php";
     <div class="container page-content">
         <?php require 'message.view.php';?>
         <div class="row">
+            <h2>Tehtävissä onnistuminen kyselytyypeittäin</h2>
+        </div>
+        <div class="row">
             <?= $report;?>
         </div>
     </div>
