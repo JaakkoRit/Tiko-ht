@@ -123,6 +123,26 @@ function getCorrectTable(){
     return $correctTable;
 }
 
+function getCorrectAnswer() {
+    $correctAnswer = null;
+
+    if(isset($_SESSION['correctAnswer'])){
+        $correctAnswer = $_SESSION['correctAnswer'];
+        unset($_SESSION['correctAnswer']);
+    }
+    return $correctAnswer;
+}
+
+function getCorrect() {
+    $correct = null;
+
+    if(isset($_SESSION['correct'])){
+        $correct = $_SESSION['correct'];
+        unset($_SESSION['correct']);
+    }
+    return $correct;
+}
+
 function tableToHtml($tableName){
     $table = Query::rawQuery(Session::selectFrom($tableName, '*'));
     $columnNames = Query::rawQuery(Session::selectColumnNames($tableName));
@@ -158,6 +178,28 @@ function getErrors() {
     if (isset($_SESSION['errors'])) {
         $errors = $_SESSION['errors'];
         unset($_SESSION['errors']);
+    }
+
+    return $errors;
+}
+
+function getSQLError() {
+    $errors = null;
+
+    if (isset($_SESSION['sqlError'])) {
+        $errors = $_SESSION['sqlError'];
+        unset($_SESSION['sqlError']);
+    }
+
+    return $errors;
+}
+
+function getSyntaxErrors() {
+    $errors = [];
+
+    if (isset($_SESSION['syntaxErrors'])) {
+        $errors = $_SESSION['syntaxErrors'];
+        unset($_SESSION['syntaxErrors']);
     }
 
     return $errors;
@@ -430,4 +472,18 @@ function build_sorter($key) {
     return function ($a, $b) use ($key) {
         return strnatcmp($b[$key], $a[$key]);
     };
+}
+
+function checkForSyntaxErrors($answer) {
+    $syntaxErrors = [];
+    if ($answer != null) {
+        if (substr($answer, -1) != ';') {
+            $syntaxErrors[] = 'Kyselyn tulee loppua puolipisteeseen.';
+        }
+        if (substr_count($answer, '(') != substr_count($answer, ')')) {
+            $syntaxErrors[] = 'Kyselyssä tulee olla parillinen määrä sulkeita.';
+        }
+    }
+
+    return $syntaxErrors;
 }

@@ -29,13 +29,13 @@ class Validator
     private function required($name)
     {
         if (! $this->request->has($name)) {
-            $this->errors = "The variable $name did not exist";
+            $this->errors = "Muuttujaa '$name' ei ole olemassa.";
 
             return false;
         }
 
         if (empty($this->request->get($name))) {
-            $this->errors[] = "The variable $name was empty.";
+            $this->errors[] = "Muuttuja '$name' oli tyhjä.";
 
             return false;
         }

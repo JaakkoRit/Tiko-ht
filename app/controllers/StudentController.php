@@ -15,11 +15,11 @@ class StudentController
         if(Gate::hasRole('opettaja'))
             header('Location:/teacher-home');
         else{
-            $sessions = Session::findAllWhere('ID_KAYTTAJA', auth()->ID_KAYTTAJA);
+            $unCompletedSessions = Session::findAllUnCompletedSessions('ID_KAYTTAJA', auth()->ID_KAYTTAJA);
             $completedSessions = Session::findAllCompletedSessions('ID_KAYTTAJA', auth()->ID_KAYTTAJA);
             $completedSessionsReport = getStudentReport($completedSessions);
 
-            return view('student-home', compact('sessions', 'completedSessionsReport'));
+            return view('student-home', compact('unCompletedSessions', 'completedSessionsReport'));
         }
     }
 

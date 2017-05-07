@@ -293,6 +293,16 @@ abstract class Model
             ->getAll(get_called_class());
     }
 
+    public static function findAllUnCompletedSessions($field, $value)
+    {
+        return App::get('database')
+            ->query("SELECT * FROM SESSIO"
+                . " WHERE " . $field . " = :id"
+                . " AND LOPAIKA IS NULL")
+            ->bind(':id', $value)
+            ->getAll(get_called_class());
+    }
+
     public static function createSchema($id)
     {
         App::get('database')
