@@ -28,6 +28,13 @@ function setSessionTimeOfBeginning($session)
     ]);
 }
 
+function setSessionTimeOfEnding($session)
+{
+    Session::update($session->ID_SESSIO, [
+        'LOPAIKA' => date("Y-m-d H:i:s")
+    ]);
+}
+
 function createTaskCompletion($sessionId, $tasks, $taskIndex, $timeAtStart)
 {
     $taskCompletion = TaskCompletion::findTaskCompletion(
