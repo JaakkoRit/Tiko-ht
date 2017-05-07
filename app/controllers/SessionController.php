@@ -61,6 +61,7 @@ class SessionController
         if ($task == null) {
             $completed = true;
             Query::dropSchema($sessionId);
+            setSessionTimeOfEnding($session);
             return view('session', compact('completed', 'courses', 'students',
                 'courseCompletion', 'errors', 'queryResult', 'correctTable'));
         }

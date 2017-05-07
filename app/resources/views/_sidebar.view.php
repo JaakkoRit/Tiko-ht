@@ -5,7 +5,7 @@
     <a class="navbar-link"href="/logout">Kirjaudu ulos</a>
     <hr>
     <ul class="nav navbar-nav">
-        <?php if (\App\App\Models\Gate::hasRole('opettaja') || \App\App\Models\Gate::hasRole('admin')):?>
+        <?php if (\App\App\Models\Gate::hasRole('opettaja') || \App\App\Models\Gate::hasRole('admin')) : ?>
             <li><a href="/session-report">Sessioraportit</a></li>
             <li><a href="/tasklistsession-report">Sessioiden<br>suoritusaikaraportit</a></li>
             <li><a href="/tasklisttask-report">Tehtävien<br>suoritusraportit</a></li>
@@ -13,7 +13,6 @@
             <li><a href="/students">Oppilaat</a></li>
             <?php if (! urlMatches('/-home$/')) : ?>
                 <li><a href="/teacher-home" class="button">Takaisin<br>etusivulle</a> </li>
-                      <?php endif; ?>
             <?php endif;?>
             <?php if (\App\App\Models\Gate::hasRole('opiskelija')): ?>
                 <?php foreach ($sessions as $session) : ?>
@@ -22,7 +21,7 @@
                     </li>
                 <?php endforeach; ?>
             <?php endif; ?>
-        <?php endif;?>
+        <?php endif; ?>
         <?php if (\App\App\Models\Gate::hasRole('opiskelija')): ?>
             <?php foreach ($sessions as $session) : ?>
                 <li>
