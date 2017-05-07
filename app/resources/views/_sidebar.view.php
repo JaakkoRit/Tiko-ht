@@ -13,6 +13,14 @@
             <li><a href="/students">Oppilaat</a></li>
             <?php if (! urlMatches('/-home$/')) : ?>
                 <li><a href="/teacher-home" class="button">Takaisin<br>etusivulle</a> </li>
+                      <?php endif; ?>
+            <?php endif;?>
+            <?php if (\App\App\Models\Gate::hasRole('opiskelija')): ?>
+                <?php foreach ($sessions as $session) : ?>
+                    <li>
+                        <a href="/session?sessionid=<?= $session->ID_SESSIO; ?>">Sessio</a>
+                    </li>
+                <?php endforeach; ?>
             <?php endif; ?>
         <?php endif;?>
         <?php if (\App\App\Models\Gate::hasRole('opiskelija')): ?>

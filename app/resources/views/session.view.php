@@ -10,6 +10,7 @@
 	<div class="row">
 		<h1><?= $task->KUVAUS; ?></h1>
 	</div>
+  <?php if (! isset($completed)) : ?>
 	<div class="row">
 		<form action="/session" method="POST">
 			<div class="col-md-5 col-sm-12 styledtable">
@@ -23,10 +24,23 @@
 			</div>
 		</form>
 	</div>
+  <?php else : ?>
+    <div class="row">
+      <a href="<?= getHomePage(); ?>" class="btn btn-lg is-primary btn-primary">Etusivulle</a>
+    </div>
+  <?php endif; ?>
 	<div class="row">
 		<div class="col-md-5 col-sm-12 styledtable">
 			<br>
-			<?php echo "Tässä edellisen kyselysi tulos". $queryResult;?>
+			<strong>Tässä edellisen kyselysi tulos:</strong>
+      <?= $queryResult; ?>
+      <?php if (isset($errors) && count($errors) > 0) : ?>
+        <div class="alert alert-danger">
+          <?= $errors; ?>
+        </div>
+      <?php endif; ?>
+      <strong>Oikea tulos:</strong>
+      <?= $correctTable; ?>
 		</div>
 	</div>
 	<div class="row">

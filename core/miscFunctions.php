@@ -21,13 +21,11 @@ function anyTasksLeft($taskIndex, $tasks, $session)
     return true;
 }
 
-function setSessionTimeOfBeginning($taskIndex, $session)
+function setSessionTimeOfBeginning($session)
 {
-    if ($taskIndex == 0) {
-        Session::update($session->ID_SESSIO, [
-            'ALKAIKA' => date("Y-m-d H:i:s")
-        ]);
-    }
+    Session::update($session->ID_SESSIO, [
+        'ALKAIKA' => date("Y-m-d H:i:s")
+    ]);
 }
 
 function createTaskCompletion($sessionId, $tasks, $taskIndex, $timeAtStart)
@@ -62,26 +60,32 @@ function correctAnswer($answer, $answerArray)
     return in_array($answer, $answerArray);
 }
 
-function createAttempt($req, $answer, $correct)
-{
+function countAttempts($taskId, $sessionId) {
     $attempts = Attempt::findAllAttempts(
         'ID_TEHTAVA',
-        $req->get('tehtavaId'),
+        $taskId,
         'ID_SESSIO',
-        $req->get('sessionId')
+        $sessionId
     );
+
+    return count($attempts);
+}
+
+function createAttempt($req, $answer, $correct)
+{
+    $attempts = countAttempts($req->get('tehtavaId'), $req->get('sessionId'));
 
     Attempt::create([
         'ID_TEHTAVA' => $req->get('tehtavaId'),
         'ID_SESSIO' => $req->get('sessionId'),
-        'YRITYSKERTA' => count($attempts)+1,
+        'YRITYSKERTA' => $attempts+1,
         'VASTAUS' => $answer,
         'ALKAIKA' => $req->get('timeAtStart'),
         'LOPAIKA' => date("Y-m-d H:i:s"),
         'OLIKOOIKEIN' => $correct
     ]);
 
-    return count($attempts);
+    return $attempts;
 }
 
 function updateTaskCompletion($req) {
@@ -91,14 +95,25 @@ function updateTaskCompletion($req) {
         date("Y-m-d H:i:s")
     );
 }
+
 function getQueryResult(){
-    $queryResult = [];
+    $queryResult = null;
 
     if(isset($_SESSION['queryResult'])){
         $queryResult = $_SESSION['queryResult'];
         unset($_SESSION['queryResult']);
     }
     return $queryResult;
+}
+
+function getCorrectTable(){
+    $correctTable = null;
+
+    if(isset($_SESSION['correctTable'])){
+        $correctTable = $_SESSION['correctTable'];
+        unset($_SESSION['correctTable']);
+    }
+    return $correctTable;
 }
 
 function tableToHtml($tableName){
@@ -192,6 +207,25 @@ function queryToHtml($table){
     }
     $tableHtml .= "</table><br>";
     return $tableHtml;
+}
+
+
+function startOfSession($session) {
+    return $session->ALKAIKA == null;
+}
+
+function sessionConfirmed($session) {
+    if (! $session || $session->ID_KAYTTAJA != auth()->ID_KAYTTAJA || $session->LOPAIKA) {
+        $_SESSION['error'] = 'Sessiota ei löytynyt tälle käyttäjälle tai se on jo suoritettu.';
+        return false;
+    }
+    return true;
+}
+
+function createExampleTables($id) {
+    Query::createSchema($id);
+    Query::createExampleTables($id);
+    Query::insertExampleValues($id);
 }
 
 function reportToHtml($table, $columnNames, $caption){
