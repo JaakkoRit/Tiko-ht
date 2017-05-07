@@ -27,21 +27,55 @@ require "_basicsidebar.view.php";
             </div>
         <?php else : ?>
             <div class="row">
-                <a href="<?= getHomePage(); ?>" class="btn btn-lg is-primary btn-primary">Etusivulle</a>
+                <a href="<?= getHomePage(); ?>" class="btn btn-lg is-primary btn-primary" style="margin-top: 10px;">Etusivulle</a>
             </div>
         <?php endif; ?>
         <div class="row">
             <div class="col-md-5 col-sm-12 styledtable">
                 <br>
-                <strong>Tässä edellisen kyselysi tulos:</strong>
-                <?= $queryResult; ?>
+                <?php if (isset($correct)) : ?>
+                    <?php if ($correct == true) : ?>
+                        <div class="alert alert-success">
+                            Vastaus oikein
+                        </div>
+                    <?php else : ?>
+                        <div class="alert alert-danger">
+                            Vastaus väärin
+                        </div>
+                    <?php endif; ?>
+                <?php endif; ?>
                 <?php if (isset($errors) && count($errors) > 0) : ?>
                     <div class="alert alert-danger">
-                        <?= $errors; ?>
+                        <?php foreach ($errors as $error) : ?>
+                            <p><b><?= $error; ?></b></p>
+                        <?php endforeach; ?>
                     </div>
+                <?php endif; ?>
+                <?php if (isset($syntaxErrors) && $syntaxErrors != null) : ?>
+                    <div class="alert alert-danger">
+                        <?php foreach ($syntaxErrors as $error) : ?>
+                            <p><b><?= $error; ?></b></p>
+                        <?php endforeach; ?>
+                    </div>
+                <?php else : ?>
+                    <strong>Tässä edellisen kyselysi tulos:</strong>
+                    <?php if (isset($sqlError) && $sqlError != null) : ?>
+                        <div class="alert alert-danger">
+                            <p><?= $sqlError; ?></p>
+                        </div>
+                    <?php else: ?>
+                        <?= $queryResult; ?>
+                    <?php endif; ?>
                 <?php endif; ?>
                 <strong>Oikea tulos:</strong>
                 <?= $correctTable; ?>
+                <?php if (isset($correctAnswer) && $correctAnswer != null) : ?>
+                    <div class="alert alert-warning">
+                        <strong>Oikea vastaus olisi ollut esimerkiksi:</strong>
+                        <br>
+                        <?= $correctAnswer; ?>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
         <div class="row">
@@ -50,17 +84,17 @@ require "_basicsidebar.view.php";
         </div>
         <div class="row">
             <div class="col-md-5 col-sm-12 styledtable">
-                <?php echo $courses; ?>
+                <?= $courses; ?>
             </div>
         </div>
         <div class="row">
             <div class="col-md-5 col-sm-12 styledtable">
-                <?php echo $students; ?>
+                <?= $students; ?>
             </div>
         </div>
         <div class="row">
             <div class="col-md-5 col-sm-12 styledtable">
-                <?php echo $courseCompletion; ?>
+                <?= $courseCompletion; ?>
             </div>
         </div>
     </div>

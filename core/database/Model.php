@@ -19,10 +19,10 @@ abstract class Model
 	public static function selectFrom($table, $selectFields){
 	    return "SELECT $selectFields FROM $table";
     }
-    public static function selectColumnNames($table){
+    public static function selectColumnNames($table, $schema){
         return "SELECT `COLUMN_NAME` 
                 FROM `INFORMATION_SCHEMA`.`COLUMNS` 
-                WHERE `TABLE_SCHEMA`='tiko' 
+                WHERE `TABLE_SCHEMA`= '$schema' 
                 AND `TABLE_NAME`='$table'";
     }
 
@@ -289,6 +289,16 @@ abstract class Model
             ->query("SELECT * FROM SESSIO"
                 . " WHERE " . $field . " = :id"
                 . " AND LOPAIKA IS NOT NULL")
+            ->bind(':id', $value)
+            ->getAll(get_called_class());
+    }
+
+    public static function findAllUnCompletedSessions($field, $value)
+    {
+        return App::get('database')
+            ->query("SELECT * FROM SESSIO"
+                . " WHERE " . $field . " = :id"
+                . " AND LOPAIKA IS NULL")
             ->bind(':id', $value)
             ->getAll(get_called_class());
     }

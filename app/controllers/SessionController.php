@@ -38,11 +38,12 @@ class SessionController
         }
 
         $errors = getErrors();
+        $sqlError = getSQLError();
         $queryResult = null;
         $correctTable = null;
-        $courses = tableToHtml('kurssit');
-        $students = tableToHtml('opiskelijat');
-        $courseCompletion = tableToHtml('suoritukset');
+        $correctAnswer = getCorrectAnswer();
+        $correct = getCorrect();
+        $syntaxErrors = getSyntaxErrors();
 
         if (isset($_SESSION['queryResult']) &&
             $_SESSION['queryResult'] != 1 && $_SESSION['queryResult'] != 0) {
@@ -58,14 +59,6 @@ class SessionController
             $correctTable = getCorrectTable();
         }
 
-        if ($task == null) {
-            $completed = true;
-            Query::dropSchema($sessionId);
-            setSessionTimeOfEnding($session);
-            return view('session', compact('completed', 'courses', 'students',
-                'courseCompletion', 'errors', 'queryResult', 'correctTable'));
-        }
-
         $timeAtStart = date("Y-m-d H:i:s");
 
         if (startOfSession($session)) {
@@ -75,8 +68,21 @@ class SessionController
 
         createTaskCompletion($sessionId, $tasks, $index, $timeAtStart);
 
+        $courses = tableToHtml("esimtaulut$sessionId.kurssit");
+        $students = tableToHtml("esimtaulut$sessionId.opiskelijat");
+        $courseCompletion = tableToHtml("esimtaulut$sessionId.suoritukset");
+
+        if ($task == null) {
+            $completed = true;
+            Query::dropSchema($sessionId);
+            setSessionTimeOfEnding($session);
+            return view('session', compact('completed', 'courses', 'students',
+                'courseCompletion', 'errors', 'queryResult', 'correctTable', 'correctAnswer', 'correct', 'syntaxErrors', 'sqlError'));
+        }
+
+
         return view('session', compact('task', 'sessionId', 'timeAtStart', 'courses', 'students',
-            'courseCompletion', 'queryResult', 'errors', 'correctTable'));
+            'courseCompletion', 'queryResult', 'errors', 'correctTable', 'correctAnswer', 'correct', 'syntaxErrors', 'sqlError'));
     }
 
     public function save()
@@ -91,13 +97,20 @@ class SessionController
         ]))->validate();
 
         if (count($errors) > 0) {
+            $_SESSION['errors'] = $errors;
             header("Location: $previousPage");
+            die();
         }
 
         $db = App::get('database');
         $exmplanswers = Answer::findAllWhere('ID_TEHTAVA', $req->get('tehtavaId'));
         $lowerCaseAnswersArray = answersLowerCase($exmplanswers);
         $lowerCaseAnswer = strtolower($req->get('vastaus'));
+
+        if ($lowerCaseAnswer == null) {
+            header('Location: ' . $previousPage);
+        }
+
         $result = null;
         $correct = false;
 
@@ -112,7 +125,7 @@ class SessionController
             }
             $_SESSION['queryResult'] = $result;
         } catch (\Exception $e) {
-            $_SESSION['errors'] = $e->getMessage();
+            $_SESSION['sqlError'] = $e->getMessage();
         }
         $db->rollback();
 
@@ -140,12 +153,19 @@ class SessionController
 
         Query::setSearchPathTo('tiko');
 
+        $syntaxErrors = checkForSyntaxErrors($lowerCaseAnswer);
+
+        if (! empty($syntaxErrors)) {
+            $correct = false;
+        }
+
         if ($correct) {
             $db->beginTransaction();
             try {
                 createAttempt($req, $lowerCaseAnswer, true);
                 updateTaskCompletion($req);
                 $db->commit();
+                $_SESSION['correct'] = true;
                 header("Location: $nextPage");
             } catch (\Exception $e) {
                 $db->rollback();
@@ -158,9 +178,14 @@ class SessionController
                 if ($attemptCount >= 2) {
                     updateTaskCompletion($req);
                     $db->commit();
+                    $_SESSION['correct'] = false;
+                    $_SESSION['syntaxErrors'] = $syntaxErrors;
+                    $_SESSION['correctAnswer'] = $lowerCaseAnswersArray[0];
                     header("Location: $nextPage");
                 } else {
                     $db->commit();
+                    $_SESSION['syntaxErrors'] = $syntaxErrors;
+                    $_SESSION['correct'] = false;
                     header("Location: $previousPage");
                 }
             } catch (\Exception $e) {
